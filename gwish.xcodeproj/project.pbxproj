@@ -1,0 +1,587 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		857673C62D6EC13A003F9071 /* gwishApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857673C52D6EC13A003F9071 /* gwishApp.swift */; };
+		857673C82D6EC13A003F9071 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857673C72D6EC13A003F9071 /* ContentView.swift */; };
+		857673CA2D6EC13C003F9071 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 857673C92D6EC13C003F9071 /* Assets.xcassets */; };
+		857673CD2D6EC13C003F9071 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 857673CC2D6EC13C003F9071 /* Preview Assets.xcassets */; };
+		857673D72D6EC13D003F9071 /* gwishTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857673D62D6EC13D003F9071 /* gwishTests.swift */; };
+		857673E12D6EC13D003F9071 /* gwishUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857673E02D6EC13D003F9071 /* gwishUITests.swift */; };
+		857673E32D6EC13D003F9071 /* gwishUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857673E22D6EC13D003F9071 /* gwishUITestsLaunchTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		857673D32D6EC13D003F9071 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 857673BA2D6EC13A003F9071 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 857673C12D6EC13A003F9071;
+			remoteInfo = gwish;
+		};
+		857673DD2D6EC13D003F9071 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 857673BA2D6EC13A003F9071 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 857673C12D6EC13A003F9071;
+			remoteInfo = gwish;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		857673C22D6EC13A003F9071 /* gwish.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = gwish.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		857673C52D6EC13A003F9071 /* gwishApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = gwishApp.swift; sourceTree = "<group>"; };
+		857673C72D6EC13A003F9071 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		857673C92D6EC13C003F9071 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		857673CC2D6EC13C003F9071 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		857673D22D6EC13D003F9071 /* gwishTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = gwishTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		857673D62D6EC13D003F9071 /* gwishTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = gwishTests.swift; sourceTree = "<group>"; };
+		857673DC2D6EC13D003F9071 /* gwishUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = gwishUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		857673E02D6EC13D003F9071 /* gwishUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = gwishUITests.swift; sourceTree = "<group>"; };
+		857673E22D6EC13D003F9071 /* gwishUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = gwishUITestsLaunchTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		857673BF2D6EC13A003F9071 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		857673CF2D6EC13D003F9071 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		857673D92D6EC13D003F9071 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		857673B92D6EC13A003F9071 = {
+			isa = PBXGroup;
+			children = (
+				857673C42D6EC13A003F9071 /* gwish */,
+				857673D52D6EC13D003F9071 /* gwishTests */,
+				857673DF2D6EC13D003F9071 /* gwishUITests */,
+				857673C32D6EC13A003F9071 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		857673C32D6EC13A003F9071 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				857673C22D6EC13A003F9071 /* gwish.app */,
+				857673D22D6EC13D003F9071 /* gwishTests.xctest */,
+				857673DC2D6EC13D003F9071 /* gwishUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		857673C42D6EC13A003F9071 /* gwish */ = {
+			isa = PBXGroup;
+			children = (
+				857673C52D6EC13A003F9071 /* gwishApp.swift */,
+				857673C72D6EC13A003F9071 /* ContentView.swift */,
+				857673C92D6EC13C003F9071 /* Assets.xcassets */,
+				857673CB2D6EC13C003F9071 /* Preview Content */,
+			);
+			path = gwish;
+			sourceTree = "<group>";
+		};
+		857673CB2D6EC13C003F9071 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				857673CC2D6EC13C003F9071 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		857673D52D6EC13D003F9071 /* gwishTests */ = {
+			isa = PBXGroup;
+			children = (
+				857673D62D6EC13D003F9071 /* gwishTests.swift */,
+			);
+			path = gwishTests;
+			sourceTree = "<group>";
+		};
+		857673DF2D6EC13D003F9071 /* gwishUITests */ = {
+			isa = PBXGroup;
+			children = (
+				857673E02D6EC13D003F9071 /* gwishUITests.swift */,
+				857673E22D6EC13D003F9071 /* gwishUITestsLaunchTests.swift */,
+			);
+			path = gwishUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		857673C12D6EC13A003F9071 /* gwish */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 857673E62D6EC13D003F9071 /* Build configuration list for PBXNativeTarget "gwish" */;
+			buildPhases = (
+				857673BE2D6EC13A003F9071 /* Sources */,
+				857673BF2D6EC13A003F9071 /* Frameworks */,
+				857673C02D6EC13A003F9071 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = gwish;
+			productName = gwish;
+			productReference = 857673C22D6EC13A003F9071 /* gwish.app */;
+			productType = "com.apple.product-type.application";
+		};
+		857673D12D6EC13D003F9071 /* gwishTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 857673E92D6EC13D003F9071 /* Build configuration list for PBXNativeTarget "gwishTests" */;
+			buildPhases = (
+				857673CE2D6EC13D003F9071 /* Sources */,
+				857673CF2D6EC13D003F9071 /* Frameworks */,
+				857673D02D6EC13D003F9071 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				857673D42D6EC13D003F9071 /* PBXTargetDependency */,
+			);
+			name = gwishTests;
+			productName = gwishTests;
+			productReference = 857673D22D6EC13D003F9071 /* gwishTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		857673DB2D6EC13D003F9071 /* gwishUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 857673EC2D6EC13D003F9071 /* Build configuration list for PBXNativeTarget "gwishUITests" */;
+			buildPhases = (
+				857673D82D6EC13D003F9071 /* Sources */,
+				857673D92D6EC13D003F9071 /* Frameworks */,
+				857673DA2D6EC13D003F9071 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				857673DE2D6EC13D003F9071 /* PBXTargetDependency */,
+			);
+			name = gwishUITests;
+			productName = gwishUITests;
+			productReference = 857673DC2D6EC13D003F9071 /* gwishUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		857673BA2D6EC13A003F9071 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1540;
+				LastUpgradeCheck = 1540;
+				TargetAttributes = {
+					857673C12D6EC13A003F9071 = {
+						CreatedOnToolsVersion = 15.4;
+					};
+					857673D12D6EC13D003F9071 = {
+						CreatedOnToolsVersion = 15.4;
+						TestTargetID = 857673C12D6EC13A003F9071;
+					};
+					857673DB2D6EC13D003F9071 = {
+						CreatedOnToolsVersion = 15.4;
+						TestTargetID = 857673C12D6EC13A003F9071;
+					};
+				};
+			};
+			buildConfigurationList = 857673BD2D6EC13A003F9071 /* Build configuration list for PBXProject "gwish" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 857673B92D6EC13A003F9071;
+			productRefGroup = 857673C32D6EC13A003F9071 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				857673C12D6EC13A003F9071 /* gwish */,
+				857673D12D6EC13D003F9071 /* gwishTests */,
+				857673DB2D6EC13D003F9071 /* gwishUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		857673C02D6EC13A003F9071 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				857673CD2D6EC13C003F9071 /* Preview Assets.xcassets in Resources */,
+				857673CA2D6EC13C003F9071 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		857673D02D6EC13D003F9071 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		857673DA2D6EC13D003F9071 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		857673BE2D6EC13A003F9071 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				857673C82D6EC13A003F9071 /* ContentView.swift in Sources */,
+				857673C62D6EC13A003F9071 /* gwishApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		857673CE2D6EC13D003F9071 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				857673D72D6EC13D003F9071 /* gwishTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		857673D82D6EC13D003F9071 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				857673E12D6EC13D003F9071 /* gwishUITests.swift in Sources */,
+				857673E32D6EC13D003F9071 /* gwishUITestsLaunchTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		857673D42D6EC13D003F9071 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 857673C12D6EC13A003F9071 /* gwish */;
+			targetProxy = 857673D32D6EC13D003F9071 /* PBXContainerItemProxy */;
+		};
+		857673DE2D6EC13D003F9071 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 857673C12D6EC13A003F9071 /* gwish */;
+			targetProxy = 857673DD2D6EC13D003F9071 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		857673E42D6EC13D003F9071 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		857673E52D6EC13D003F9071 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		857673E72D6EC13D003F9071 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"gwish/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.conniezhu.gwish;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		857673E82D6EC13D003F9071 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"gwish/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.conniezhu.gwish;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		857673EA2D6EC13D003F9071 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.conniezhu.gwishTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/gwish.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/gwish";
+			};
+			name = Debug;
+		};
+		857673EB2D6EC13D003F9071 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.conniezhu.gwishTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/gwish.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/gwish";
+			};
+			name = Release;
+		};
+		857673ED2D6EC13D003F9071 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.conniezhu.gwishUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = gwish;
+			};
+			name = Debug;
+		};
+		857673EE2D6EC13D003F9071 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.conniezhu.gwishUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = gwish;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		857673BD2D6EC13A003F9071 /* Build configuration list for PBXProject "gwish" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				857673E42D6EC13D003F9071 /* Debug */,
+				857673E52D6EC13D003F9071 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		857673E62D6EC13D003F9071 /* Build configuration list for PBXNativeTarget "gwish" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				857673E72D6EC13D003F9071 /* Debug */,
+				857673E82D6EC13D003F9071 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		857673E92D6EC13D003F9071 /* Build configuration list for PBXNativeTarget "gwishTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				857673EA2D6EC13D003F9071 /* Debug */,
+				857673EB2D6EC13D003F9071 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		857673EC2D6EC13D003F9071 /* Build configuration list for PBXNativeTarget "gwishUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				857673ED2D6EC13D003F9071 /* Debug */,
+				857673EE2D6EC13D003F9071 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 857673BA2D6EC13A003F9071 /* Project object */;
+}
