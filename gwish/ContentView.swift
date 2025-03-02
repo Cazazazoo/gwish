@@ -7,15 +7,20 @@
 
 import SwiftUI
 
+// UI Logic/Entry Point
 struct ContentView: View {
+    @EnvironmentObject var authService: AuthService
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        Group {
+            if authService.isAuthenticated {
+                // Show wishlist view if authenticated
+                EmptyView()
+            } else {
+                // Show login view if not authenticated
+                LoginSignUpView()
+            }
         }
-        .padding()
     }
 }
 
