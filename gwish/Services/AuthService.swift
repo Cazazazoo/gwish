@@ -14,6 +14,8 @@ import Combine
 
 class AuthService: ObservableObject {
     @Published var user: User? // User state, automatically updates UI, source of truth
+    private let db = Firestore.firestore()
+    
     var isAuthenticated: Bool {
         return user != nil
     }
@@ -22,8 +24,12 @@ class AuthService: ObservableObject {
 
     init() {
         // Listen to auth state changes
-        authStateListenerHandle = Auth.auth().addStateDidChangeListener { auth, user in
-            self.user = user
+        authStateListenerHandle = Auth.auth().addStateDidChangeListener { auth, authUser in
+            if let authUser = authUser {
+                self.fetchUserFromFirestore(uid: authUser.uid)
+            } else {
+                self.user = nil
+            }
         }
     }
     
@@ -36,32 +42,26 @@ class AuthService: ObservableObject {
                 completion(.failure(error))
                 return
             }
-            guard let user = result?.user else {
+            guard let authUser = result?.user else {
                 completion(.failure(NSError(domain: "No user", code: -1, userInfo: nil)))
                 return
             }
             
-            // After successful auth, save username to Firestore
-            let db = Firestore.firestore()
-            let userRef = db.collection("users").document(user.uid)
-            
-            // Save the username and other details to Firestore
-            userRef.setData([
-                "username": username,
-                "email": email,
-                "uid": user.uid
-            ]) { error in
-                if let error = error {
-                    completion(.failure(error))
-                    return
+            let newUser = User(userID: authUser.uid, username: username, createdDate: Timestamp(date: Date()))
+        
+            do {
+                try self.db.collection("users").document(authUser.uid).setData(from: newUser) { error in
+                    if let error = error {
+                        completion(.failure(error))
+                    } else {
+                        DispatchQueue.main.async {
+                            self.user = newUser
+                        }
+                        completion(.success(newUser))
+                    }
                 }
-                
-                // Update the published user property
-                // Ensure this UI update happens on the main thread
-                DispatchQueue.main.async {
-                    self.user = user
-                }
-                completion(.success(user))
+            } catch {
+                completion(.failure(error))
             }
         }
     }
@@ -72,29 +72,14 @@ class AuthService: ObservableObject {
                 completion(.failure(error))
                 return
             }
-            guard let user = result?.user else {
+            guard let authUser = result?.user else {
                 completion(.failure(NSError(domain: "No user", code: -1, userInfo: nil)))
                 return
             }
             
             // Retrieve from Firestore after login
             let db = Firestore.firestore()
-            let userRef = db.collection("users").document(user.uid)
-            
-            userRef.getDocument { document, error in
-                if let document = document, document.exists {
-                    if let username = document.get("username") as? String {
-                        // Successfully retrieved the username
-                        print("Username: \(username)")
-                    }
-                }
-            }
-            
-            // Update the published user property
-            DispatchQueue.main.async {
-                self.user = user
-            }
-            completion(.success(user))
+            self.fetchUserFromFirestore(uid: authUser.uid, completion: completion)
         }
     }
     
@@ -110,7 +95,29 @@ class AuthService: ObservableObject {
         }
     }
     
-//    func ifUserSignedIn() -> Bool {
-//        return user != nil
-//    }
+    // MARK: - Firestore Fetch (Using Codable)
+        private func fetchUserFromFirestore(uid: String, completion: ((Result<User, Error>) -> Void)? = nil) {
+            let userRef = db.collection("users").document(uid)
+
+            userRef.getDocument { document, error in
+                if let error = error {
+                    completion?(.failure(error))
+                    return
+                }
+                guard let document = document, document.exists else {
+                    completion?(.failure(NSError(domain: "Document not found", code: -1, userInfo: nil)))
+                    return
+                }
+
+                do {
+                    let user = try document.data(as: User.self) // Automatically decodes
+                    DispatchQueue.main.async {
+                        self.user = user
+                    }
+                    completion?(.success(user))
+                } catch {
+                    completion?(.failure(error))
+                }
+            }
+        }
 }

@@ -12,7 +12,8 @@ struct Wishlist: Codable {
     var title: String
     var lastUpdated: Timestamp
     var userID: String
-    var creationDate: Date
+    // TODO: add profileID for making a wishlist for frined
+    var creationDate: Timestamp
     
     // If Needed: decoded into the names of the struct
 //    enum CodingKeys: String, CodingKey {
