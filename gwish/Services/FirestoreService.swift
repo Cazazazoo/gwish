@@ -10,80 +10,74 @@ import FirebaseFirestore
 
 // TODO: figure out Views if its just a click and layer above current screen
 
-// Define the protocol
-protocol FirestoreServiceProtocol {
-    func createWishlist(_ wishlist: Wishlist, completion: @escaping (Result<DocumentReference, Error>) -> Void)
-    func fetchWishlists(forUser userID: String, completion: @escaping (Result<[Wishlist], Error>) -> Void)
-    
-    func addItem(toWishlist wishlistID: String, item: Item, completion: @escaping (Result<Void, Error>) -> Void)
-    func fetchItems(forWishlist wishlistID: String, completion: @escaping (Result<[Item], Error>) -> Void)
-}
-
-class FirestoreService: FirestoreServiceProtocol {
-    // Singleton
+final class FirestoreService {
     static let shared = FirestoreService()
     private let db = Firestore.firestore()
     
-    // MARK: - Wishlist Methods
+    private init() {}
 
-    func createWishlist(_ wishlist: Wishlist, completion: @escaping (Result<DocumentReference, Error>) -> Void) {
+    // MARK: - Add Document
+    func addDocument<T: Encodable>(to collectionPath: String, data: T, completion: @escaping (Result<DocumentReference, Error>) -> Void) {
         do {
-            let ref = try db
-              .collection("wishlists")
-              .addDocument(from: wishlist)
+            let ref = try db.collection(collectionPath).addDocument(from: data)
             completion(.success(ref))
         } catch {
             completion(.failure(error))
         }
     }
-    
-    func fetchWishlists(forUser userID: String, completion: @escaping (Result<[Wishlist], Error>) -> Void) {
-        db.collection("wishlists").whereField("userID", isEqualTo: userID).getDocuments { snapshot, error in
+
+    // MARK: - Fetch Documents with Optional Filtering
+    func fetchDocuments<T: Decodable>(from collectionPath: String, as type: T.Type, whereField field: String? = nil, isEqualTo value: Any? = nil, completion: @escaping (Result<[T], Error>) -> Void) {
+        var query: Query = db.collection(collectionPath)
+        if let field = field, let value = value {
+            query = query.whereField(field, isEqualTo: value)
+        }
+
+        query.getDocuments { snapshot, error in
             if let error = error {
                 completion(.failure(error))
                 return
             }
-            guard let documents = snapshot?.documents else {
-                completion(.success([]))
-                return
-            }
-            
-            let wishlists = documents.compactMap { try? $0.data(as: Wishlist.self) }
-            completion(.success(wishlists))
+
+            let documents = snapshot?.documents.compactMap { try? $0.data(as: T.self) } ?? []
+            completion(.success(documents))
         }
     }
-    
-    // MARK: - Item Methods
-    
-    func addItem(toWishlist wishlistID: String, item: Item, completion: @escaping (Result<Void, any Error>) -> Void) {
+
+    // MARK: - Add Subdocument
+    func addSubdocument<T: Encodable>(to parentCollection: String, parentId: String, subcollection: String, data: T, completion: @escaping (Result<Void, Error>) -> Void) {
         do {
-            let _ = try db.collection("wishlists").document(wishlistID).collection("items").addDocument(from: item) { error in
-                if let error = error {
-                    completion(.failure(error))
-                } else {
-                    completion(.success(()))
+            let _ = try db
+                .collection(parentCollection)
+                .document(parentId)
+                .collection(subcollection)
+                .addDocument(from: data) { error in
+                    if let error = error {
+                        completion(.failure(error))
+                    } else {
+                        completion(.success(()))
+                    }
                 }
-            }
         } catch {
             completion(.failure(error))
         }
     }
-    
-    func fetchItems(forWishlist wishlistID: String, completion: @escaping (Result<[Item], any Error>) -> Void) {
-        db.collection("wishlists").document(wishlistID).collection("items").getDocuments { snapshot, error in
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
-            guard let documents = snapshot?.documents else {
-                completion(.success([]))
-                return
-            }
 
-            let items = documents.compactMap { try? $0.data(as: Item.self) }
-            completion(.success(items))
-        }
+    // MARK: - Fetch Subdocuments
+    func fetchSubdocuments<T: Decodable>(from parentCollection: String, parentId: String, subcollection: String, as type: T.Type, completion: @escaping (Result<[T], Error>) -> Void) {
+        db.collection(parentCollection)
+            .document(parentId)
+            .collection(subcollection)
+            .getDocuments { snapshot, error in
+                if let error = error {
+                    completion(.failure(error))
+                    return
+                }
+
+                let documents = snapshot?.documents.compactMap { try? $0.data(as: T.self) } ?? []
+                completion(.success(documents))
+            }
     }
 }
-    
+
 

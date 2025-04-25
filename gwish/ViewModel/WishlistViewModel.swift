@@ -16,16 +16,23 @@ class WishlistViewModel: ObservableObject {
     // TODO: Add     @Published var isLoading = false
     @Published var isAddingWishlist = false // Controls pop-up visibility
     
-    private let firestoreService: FirestoreServiceProtocol
-    
-    init(firestoreService: FirestoreServiceProtocol = FirestoreService()) {
-        self.firestoreService = firestoreService
+    private let wishlistService: WishlistService
+    private let itemService: ItemService
+
+    init(
+        wishlistService: WishlistService = WishlistService(),
+        itemService: ItemService = ItemService()
+    ) {
+        self.wishlistService = wishlistService
+        self.itemService = itemService
         fetchWishlists()
     }
     
+    // MARK: - Wishlist
+    
     func fetchWishlists() {
         guard let userID = Auth.auth().currentUser?.uid else { return }
-        firestoreService.fetchWishlists(forUser: userID) { [weak self] result in
+        wishlistService.fetchWishlists(forUser: userID) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let wishlists):
@@ -48,7 +55,7 @@ class WishlistViewModel: ObservableObject {
             creationDate: Timestamp(date: Date())
         )
 
-        firestoreService.createWishlist(newWishlist) { [weak self] result in
+        wishlistService.createWishlist(newWishlist) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let ref):
@@ -66,8 +73,10 @@ class WishlistViewModel: ObservableObject {
         }
     }
 
+    // MARK: - Item
+    
     func addItem(toWishlist wishlistID: String, item: Item) {
-        firestoreService.addItem(toWishlist: wishlistID, item: item) { [weak self] result in
+        itemService.addItem(toWishlist: wishlistID, item: item) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success:
@@ -79,6 +88,4 @@ class WishlistViewModel: ObservableObject {
             }
         }
     }
-    
-    
 }
