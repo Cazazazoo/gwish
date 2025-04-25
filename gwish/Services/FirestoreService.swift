@@ -12,7 +12,7 @@ import FirebaseFirestore
 
 // Define the protocol
 protocol FirestoreServiceProtocol {
-    func createWishlist(_ wishlist: Wishlist, completion: @escaping (Result<Void, Error>) -> Void)
+    func createWishlist(_ wishlist: Wishlist, completion: @escaping (Result<DocumentReference, Error>) -> Void)
     func fetchWishlists(forUser userID: String, completion: @escaping (Result<[Wishlist], Error>) -> Void)
     
     func addItem(toWishlist wishlistID: String, item: Item, completion: @escaping (Result<Void, Error>) -> Void)
@@ -26,15 +26,12 @@ class FirestoreService: FirestoreServiceProtocol {
     
     // MARK: - Wishlist Methods
 
-    func createWishlist(_ wishlist: Wishlist, completion: @escaping (Result<Void, Error>) -> Void) {
+    func createWishlist(_ wishlist: Wishlist, completion: @escaping (Result<DocumentReference, Error>) -> Void) {
         do {
-            let _ = try db.collection("wishlists").addDocument(from: wishlist) { error in
-                if let error = error {
-                    completion(.failure(error))
-                } else {
-                    completion(.success(()))
-                }
-            }
+            let ref = try db
+              .collection("wishlists")
+              .addDocument(from: wishlist)
+            completion(.success(ref))
         } catch {
             completion(.failure(error))
         }

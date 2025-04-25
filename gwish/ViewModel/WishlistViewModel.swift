@@ -41,12 +41,7 @@ class WishlistViewModel: ObservableObject {
     func createWishlist(title: String, initialItem: Item?) {
         guard let userID = Auth.auth().currentUser?.uid else { return }
         
-        // Create the document reference first to get an ID
-        let docRef = Firestore.firestore().collection("wishlists").document()
-        let wishlistID = docRef.documentID
-        
         let newWishlist = Wishlist(
-            wishlistID: wishlistID,
             title: title,
             lastUpdated: Timestamp(date: Date()),
             userID: userID,
@@ -56,7 +51,8 @@ class WishlistViewModel: ObservableObject {
         firestoreService.createWishlist(newWishlist) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
-                case .success:
+                case .success(let ref):
+                    let wishlistID = ref.documentID
                     if let initialItem = initialItem {
                         self?.addItem(toWishlist: wishlistID, item: initialItem)
                     } else {
@@ -72,6 +68,7 @@ class WishlistViewModel: ObservableObject {
 
     func addItem(toWishlist wishlistID: String, item: Item) {
         firestoreService.addItem(toWishlist: wishlistID, item: item) { [weak self] result in
+            print(wishlistID)
             DispatchQueue.main.async {
                 switch result {
                 case .success:
