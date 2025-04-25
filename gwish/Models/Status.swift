@@ -8,6 +8,6 @@
 import FirebaseFirestore
 
 struct Status: Codable {
-    var statusID: String
+    @DocumentID var statusID: String?
     var name: String
 }

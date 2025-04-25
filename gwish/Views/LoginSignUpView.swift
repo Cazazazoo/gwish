@@ -16,7 +16,8 @@ struct LoginSignUpView: View {
     @State private var username = ""
     // Start with Login page
     @State private var signUpPage = false
-    
+    @State private var isPasswordVisible = false
+
     var body: some View {
         VStack {
             Text(signUpPage ? "Create Your Account" : "Login")
@@ -35,9 +36,21 @@ struct LoginSignUpView: View {
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
             
-            SecureField("Password", text: $password)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
+            if isPasswordVisible {
+                TextField("Enter your password", text: $password)
+                    .padding()
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+            } else {
+                SecureField("Enter your password", text: $password)
+                    .padding()
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+            }
+            Button(action: {
+                isPasswordVisible.toggle()
+            }) {
+                Image(systemName: isPasswordVisible ? "eye.slash.fill" : "eye.fill")
+                    .foregroundColor(.gray)
+            }
             
             // Toggle between Login and Signup
             Button(action: {
@@ -56,6 +69,7 @@ struct LoginSignUpView: View {
                         case .success(let user):
                             // TODO: navigate to MainApp
                             print("Signed up as: \(user)")
+                            
                         case .failure(let error):
                             print("Sign up error: \(error.localizedDescription)")
                         }
@@ -82,8 +96,4 @@ struct LoginSignUpView: View {
         }
         .padding()
     }
-}
-
-#Preview {
-    LoginSignUpView()
 }

@@ -10,8 +10,6 @@ import FirebaseAuth
 import FirebaseFirestore
 import Combine
 
-// TODO: incorporate the firestore stuff with the User struc
-
 class AuthService: ObservableObject {
     @Published var user: User? // User state, automatically updates UI, source of truth
     private let db = Firestore.firestore()
@@ -78,7 +76,6 @@ class AuthService: ObservableObject {
             }
             
             // Retrieve from Firestore after login
-            let db = Firestore.firestore()
             self.fetchUserFromFirestore(uid: authUser.uid, completion: completion)
         }
     }
@@ -96,28 +93,28 @@ class AuthService: ObservableObject {
     }
     
     // MARK: - Firestore Fetch (Using Codable)
-        private func fetchUserFromFirestore(uid: String, completion: ((Result<User, Error>) -> Void)? = nil) {
-            let userRef = db.collection("users").document(uid)
+    private func fetchUserFromFirestore(uid: String, completion: ((Result<User, Error>) -> Void)? = nil) {
+        let userRef = db.collection("users").document(uid)
 
-            userRef.getDocument { document, error in
-                if let error = error {
-                    completion?(.failure(error))
-                    return
-                }
-                guard let document = document, document.exists else {
-                    completion?(.failure(NSError(domain: "Document not found", code: -1, userInfo: nil)))
-                    return
-                }
+        userRef.getDocument { document, error in
+            if let error = error {
+                completion?(.failure(error))
+                return
+            }
+            guard let document = document, document.exists else {
+                completion?(.failure(NSError(domain: "Document not found", code: -1, userInfo: nil)))
+                return
+            }
 
-                do {
-                    let user = try document.data(as: User.self) // Automatically decodes
-                    DispatchQueue.main.async {
-                        self.user = user
-                    }
-                    completion?(.success(user))
-                } catch {
-                    completion?(.failure(error))
+            do {
+                let user = try document.data(as: User.self) // Automatically decodes
+                DispatchQueue.main.async {
+                    self.user = user
                 }
+                completion?(.success(user))
+            } catch {
+                completion?(.failure(error))
             }
         }
+    }
 }

@@ -8,6 +8,6 @@
 import FirebaseFirestore
 
 struct Category: Codable {
-    var categoryID: String
+    @DocumentID var categoryID: String?
     var name: String
 }

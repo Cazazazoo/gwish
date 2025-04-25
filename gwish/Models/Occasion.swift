@@ -8,6 +8,6 @@
 import FirebaseFirestore
 
 struct Occasion: Codable {
-    var occasionID: String
+    @DocumentID var occasionID: String?
     var name: String
 }

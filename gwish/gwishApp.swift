@@ -19,6 +19,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 }
 
 @main
+
 struct gwishApp: App {
     // register app delegate for Firebase setup
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate

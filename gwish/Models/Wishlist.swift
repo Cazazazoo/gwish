@@ -8,12 +8,13 @@
 import FirebaseFirestore
 
 struct Wishlist: Codable {
-    var wishlistID: String
+    @DocumentID var wishlistID: String?
     var title: String
     var lastUpdated: Timestamp
     var userID: String
     // TODO: add profileID for making a wishlist for frined
     var creationDate: Timestamp
+    // TODO: add public/private
     
     // If Needed: decoded into the names of the struct
 //    enum CodingKeys: String, CodingKey {

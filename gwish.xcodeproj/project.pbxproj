@@ -30,6 +30,8 @@
 		85DB03F42D6EC8A700EC98C0 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 85DB03F32D6EC8A700EC98C0 /* FirebaseCore */; };
 		85DB03F62D6EC8A700EC98C0 /* FirebaseFunctions in Frameworks */ = {isa = PBXBuildFile; productRef = 85DB03F52D6EC8A700EC98C0 /* FirebaseFunctions */; };
 		85DB03FB2D6EE30300EC98C0 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DB03FA2D6EE30300EC98C0 /* AuthService.swift */; };
+		85DC0B1B2D85B7270049EDED /* WishlistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DC0B1A2D85B7260049EDED /* WishlistView.swift */; };
+		85DC0B1D2D85BC4D0049EDED /* AddWishlistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DC0B1C2D85BC4D0049EDED /* AddWishlistView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,6 +73,8 @@
 		857673E22D6EC13D003F9071 /* gwishUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = gwishUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		857673EF2D6EC37A003F9071 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = "GoogleService-Info.plist"; path = "gwish/GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		85DB03FA2D6EE30300EC98C0 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		85DC0B1A2D85B7260049EDED /* WishlistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WishlistView.swift; sourceTree = "<group>"; };
+		85DC0B1C2D85BC4D0049EDED /* AddWishlistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddWishlistView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -181,6 +185,8 @@
 			isa = PBXGroup;
 			children = (
 				8562143B2D6F0E8D007A13CF /* LoginSignUpView.swift */,
+				85DC0B1A2D85B7260049EDED /* WishlistView.swift */,
+				85DC0B1C2D85BC4D0049EDED /* AddWishlistView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -343,6 +349,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				85DC0B1B2D85B7270049EDED /* WishlistView.swift in Sources */,
 				856214452D72EE78007A13CF /* Wishlist.swift in Sources */,
 				8562144B2D737AA3007A13CF /* Category.swift in Sources */,
 				856214492D737660007A13CF /* Item.swift in Sources */,
@@ -353,6 +360,7 @@
 				857673C82D6EC13A003F9071 /* ContentView.swift in Sources */,
 				856214472D72EEBD007A13CF /* User.swift in Sources */,
 				8562143C2D6F0E8D007A13CF /* LoginSignUpView.swift in Sources */,
+				85DC0B1D2D85BC4D0049EDED /* AddWishlistView.swift in Sources */,
 				857673C62D6EC13A003F9071 /* gwishApp.swift in Sources */,
 				856214422D72E7D1007A13CF /* WishlistViewModel.swift in Sources */,
 			);
