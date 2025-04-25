@@ -68,7 +68,6 @@ class WishlistViewModel: ObservableObject {
 
     func addItem(toWishlist wishlistID: String, item: Item) {
         firestoreService.addItem(toWishlist: wishlistID, item: item) { [weak self] result in
-            print(wishlistID)
             DispatchQueue.main.async {
                 switch result {
                 case .success:

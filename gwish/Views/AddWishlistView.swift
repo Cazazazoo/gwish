@@ -63,7 +63,7 @@ struct AddWishlistView: View {
                         newItem = Item(
                             name: itemName,
                             price: Double(itemPrice),
-                            priority: selectedPriority,
+                            priority: selectedPriority == .none ? nil : selectedPriority,
                             url: nil,
                             location: nil,
                             creationDate: Timestamp(date: Date()),
