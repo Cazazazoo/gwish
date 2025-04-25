@@ -20,7 +20,7 @@ struct Item: Codable {
     var status: DocumentReference? // Reference to Status
 }
 
-enum Priority: String, Codable {
-    case low, medium, high
+enum Priority: String, Codable, CaseIterable {
+    case none, low, medium, high
 }
 

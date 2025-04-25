@@ -14,7 +14,7 @@ struct AddWishlistView: View {
     @State private var addItem = false // Toggle for showing item input
     @State private var itemName = ""
     @State private var itemPrice = ""
-    @State private var selectedPriority: Priority? = nil
+    @State private var selectedPriority: Priority = .none
 
     var body: some View {
         VStack(spacing: 20) {
@@ -39,10 +39,9 @@ struct AddWishlistView: View {
                         .keyboardType(.decimalPad)
 
                     Picker("Priority", selection: $selectedPriority) {
-                        Text("None").tag(nil as Priority?)
-                        Text("Low").tag(Priority.low)
-                        Text("Medium").tag(Priority.medium)
-                        Text("High").tag(Priority.high)
+                        ForEach(Priority.allCases, id: \.self) { priority in
+                            Text(priority.rawValue.capitalized).tag(priority)
+                        }
                     }
                     .pickerStyle(SegmentedPickerStyle())
                 }
