@@ -32,7 +32,7 @@ class WishlistViewModel: ObservableObject {
                     self?.wishlists = wishlists
                 case .failure(let error):
                     // Handle the error (e.g., show an alert)
-                    print("Error fetching wishlists: \(error.localizedDescription)")
+                    Logger.error("Error fetching wishlists: \(error.localizedDescription)")
                 }
             }
         }
@@ -60,7 +60,7 @@ class WishlistViewModel: ObservableObject {
                         self?.isAddingWishlist = false
                     }
                 case .failure(let error):
-                    print("Error creating wishlist: \(error.localizedDescription)")
+                    Logger.error("Error creating wishlist: \(error.localizedDescription)")
                 }
             }
         }
@@ -74,7 +74,7 @@ class WishlistViewModel: ObservableObject {
                     self?.fetchWishlists()
                     self?.isAddingWishlist = false
                 case .failure(let error):
-                    print("Error adding item: \(error.localizedDescription)")
+                    Logger.error("Error adding item: \(error.localizedDescription)")
                 }
             }
         }

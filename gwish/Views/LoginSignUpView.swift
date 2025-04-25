@@ -68,10 +68,10 @@ struct LoginSignUpView: View {
                         switch result {
                         case .success(let user):
                             // TODO: navigate to MainApp
-                            print("Signed up as: \(user)")
+                            Logger.info("Signed up as: \(user)")
                             
                         case .failure(let error):
-                            print("Sign up error: \(error.localizedDescription)")
+                            Logger.info("Sign up error: \(error.localizedDescription)")
                         }
                     }
                 } else {
@@ -79,9 +79,9 @@ struct LoginSignUpView: View {
                         switch result {
                         case .success(let user):
                             // TODO: navigate to MainApp
-                            print("Logged in as: \(user)")
+                            Logger.info("Logged in as: \(user)")
                         case .failure(let error):
-                            print("Login error: \(error.localizedDescription)")
+                            Logger.info("Login error: \(error.localizedDescription)")
                         }
                     }
                 }

@@ -56,10 +56,10 @@ struct WishlistView: View {
             switch result {
             case .success:
                 // Handle successful sign-out (e.g., redirect to login view)
-                print("Successfully signed out")
+                Logger.debug("Successfully signed out")
             case .failure(let error):
                 // Handle error during sign-out
-                print("Sign-out failed: \(error.localizedDescription)")
+                Logger.error("Sign-out failed: \(error.localizedDescription)")
             }
         }
     }
