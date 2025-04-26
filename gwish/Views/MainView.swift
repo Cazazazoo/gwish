@@ -17,11 +17,11 @@ struct MainView: View {
     private var currentTitle: String {
         switch selectedScreen {
         case .home:
-            return "Home"
+            return "gwish"
         case .wishlists:
             return "Your Wishlists"
         case .profiles:
-            return "Profile"
+            return "Profiles"
         }
     }
 

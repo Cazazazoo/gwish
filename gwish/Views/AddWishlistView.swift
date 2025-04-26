@@ -10,11 +10,11 @@ import FirebaseCore
 
 struct AddWishlistView: View {
     @ObservedObject var viewModel: WishlistViewModel
+    @State private var itemDrafts: [ItemDraft] = [ItemDraft()]
+    @State private var showItemDetail = false
+    @State private var selectedDraftIndex: Int? = nil
     @State private var wishlistTitle = ""
     @State private var addItem = false // Toggle for showing item input
-    @State private var itemName = ""
-    @State private var itemPrice = ""
-    @State private var selectedPriority: Priority = .none
 
     var body: some View {
         VStack(spacing: 20) {
@@ -30,22 +30,47 @@ struct AddWishlistView: View {
                 .padding()
 
             if addItem {
-                VStack(alignment: .leading, spacing: 10) {
-                    TextField("Item name", text: $itemName)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                VStack(spacing: 12) {
+                    ForEach(itemDrafts.indices, id: \.self) { index in
+                        let draft = itemDrafts[index]
 
-                    TextField("Item price (optional)", text: $itemPrice)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .keyboardType(.decimalPad)
+                        HStack {
+                            // Different placeholder for first item
+                            TextField(
+                                index == 0 ? "Enter item name" : "Add another item..",
+                                text: $itemDrafts[index].name
+                            )
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
 
-                    Picker("Priority", selection: $selectedPriority) {
-                        ForEach(Priority.allCases, id: \.self) { priority in
-                            Text(priority.rawValue.capitalized).tag(priority)
+                            Spacer()
+
+                            if !draft.name.isEmpty {
+                                Button("Edit Details") {
+                                    selectedDraftIndex = index
+                                    showItemDetail = true
+                                }
+                            }
+                        }
+                        // Only append a new item if this is the last item and it's now non-empty
+                        .onChange(of: draft.name) { oldValue, newValue in
+                            let isLast = index == itemDrafts.count - 1
+                            
+                            if isLast && !newValue.isEmpty {
+                                if itemDrafts.count < 5 {
+                                    itemDrafts.append(ItemDraft())
+                                }
+                            } else if !isLast && newValue.isEmpty {
+                                // Remove if it's not the first and not the last item (the persistent blank one)
+                                if index != 0 && index != itemDrafts.count - 1 {
+                                    _ = withAnimation {
+                                        itemDrafts.remove(at: index)
+                                    }
+                                }
+                            }
                         }
                     }
-                    .pickerStyle(SegmentedPickerStyle())
                 }
-                .padding()
+                .padding(.horizontal)
             }
 
             HStack {
@@ -58,21 +83,23 @@ struct AddWishlistView: View {
                 Spacer()
 
                 Button("Save") {
-                    var newItem: Item? = nil
-                    if addItem, !itemName.isEmpty {
-                        newItem = Item(
-                            name: itemName,
-                            price: Double(itemPrice),
-                            priority: selectedPriority == .none ? nil : selectedPriority,
-                            url: nil,
-                            location: nil,
-                            creationDate: Timestamp(date: Date()),
-                            category: nil,
-                            occasion: nil,
-                            status: nil
-                        )
-                    }
-                    viewModel.createWishlist(title: wishlistTitle, initialItem: newItem)
+                    let newItems: [Item] = itemDrafts
+                        .filter { !$0.name.isEmpty }
+                        .map { draft in
+                            Item(
+                                name: draft.name,
+                                price: Double(draft.price),
+                                priority: draft.priority == .none ? nil : draft.priority,
+                                url: draft.link.isEmpty ? nil : [draft.link],
+                                location: draft.location.isEmpty ? nil : draft.location,
+                                creationDate: Timestamp(date: Date()),
+                                category: nil,
+                                occasion: nil,
+                                status: nil
+                            )
+                        }
+                    
+                    viewModel.createWishlist(title: wishlistTitle, initialItems: newItems)
                 }
                 .padding()
                 .disabled(wishlistTitle.isEmpty)
@@ -83,5 +110,10 @@ struct AddWishlistView: View {
         .cornerRadius(10)
         .shadow(radius: 10)
         .padding()
+        .sheet(isPresented: $showItemDetail) {
+            if let index = selectedDraftIndex {
+                ItemDetailView(item: $itemDrafts[index], mode: .add)
+            }
+        }
     }
 }

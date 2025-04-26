@@ -10,7 +10,6 @@ import FirebaseAuth
 import FirebaseCore
 import FirebaseFirestore
 
-// ViewModel example for managing the wishlist data:
 class WishlistViewModel: ObservableObject {
     @Published var wishlists: [Wishlist] = []
     // TODO: Add     @Published var isLoading = false
@@ -45,7 +44,7 @@ class WishlistViewModel: ObservableObject {
         }
     }
     
-    func createWishlist(title: String, initialItem: Item?) {
+    func createWishlist(title: String, initialItems: [Item]) {
         guard let userID = Auth.auth().currentUser?.uid else { return }
         
         let newWishlist = Wishlist(
@@ -60,12 +59,18 @@ class WishlistViewModel: ObservableObject {
                 switch result {
                 case .success(let ref):
                     let wishlistID = ref.documentID
-                    if let initialItem = initialItem {
-                        self?.addItem(toWishlist: wishlistID, item: initialItem)
-                    } else {
-                        self?.fetchWishlists()
-                        self?.isAddingWishlist = false
+                    
+                    if !initialItems.isEmpty {
+                        // If there are items to add, add them all
+                        for item in initialItems {
+                            self?.addItem(toWishlist: wishlistID, item: item)
+                        }
                     }
+
+                    // Refresh wishlists and dismiss
+                    self?.fetchWishlists()
+                    self?.isAddingWishlist = false
+                    
                 case .failure(let error):
                     Logger.error("Error creating wishlist: \(error.localizedDescription)")
                 }
