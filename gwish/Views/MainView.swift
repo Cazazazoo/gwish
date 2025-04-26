@@ -7,39 +7,57 @@
 
 import SwiftUI
 
+// TODO: Add settings for profile pic
+
 struct MainView: View {
     @State private var isSidebarVisible = false
     @State private var selectedScreen: SidebarOption = .wishlists
     @EnvironmentObject var authService: AuthService // Access AuthService to handle sign-out
+    
+    private var currentTitle: String {
+        switch selectedScreen {
+        case .home:
+            return "Home"
+        case .wishlists:
+            return "Your Wishlists"
+        case .profiles:
+            return "Profile"
+        }
+    }
 
     var body: some View {
         ZStack(alignment: .leading) {
-            // Main content
-            Group {
-                switch selectedScreen {
-                case .home:
-                    EmptyView()
-                case .wishlists:
-                    WishlistView()
-                case .profiles:
-                    EmptyView()
+            VStack(spacing: 0) {
+                // Shared Top Bar
+                TopBarView(
+                    onProfileTap: {
+                        withAnimation {
+                            isSidebarVisible.toggle()
+                        }
+                    },
+                    onFilterTap: {
+                        // filter action
+                    },
+                    title: currentTitle
+                )
+
+                Divider()
+
+                // Main Screen Content
+                Group {
+                    switch selectedScreen {
+                    case .home:
+                        EmptyView()
+                    case .wishlists:
+                        WishlistView()
+                    case .profiles:
+                        EmptyView()
+                    }
                 }
             }
             .disabled(isSidebarVisible)
-            .overlay(
-                Button(action: {
-                    withAnimation {
-                        isSidebarVisible.toggle()
-                    }
-                }) {
-                    Image(systemName: "line.horizontal.3")
-                        .font(.title)
-                        .padding()
-                },
-                alignment: .topLeading
-            )
-            
-            // Dimmed overlay when sidebar is open
+
+            // Background overlay
             if isSidebarVisible {
                 Color.black.opacity(0.3)
                     .edgesIgnoringSafeArea(.all)
@@ -48,10 +66,10 @@ struct MainView: View {
                             isSidebarVisible = false
                         }
                     }
-                    .zIndex(0) // Below the sidebar
+                    .zIndex(0)
             }
-            
-            // Sidebar itself
+
+            // Sidebar
             if isSidebarVisible {
                 SidebarView(
                     onSelect: { selected in
@@ -70,12 +88,11 @@ struct MainView: View {
                 .frame(width: 250)
                 .background(Color(.systemGray6))
                 .transition(.move(edge: .leading))
-                .zIndex(1) // On top of overlay
+                .zIndex(1)
             }
         }
     }
-    
-    // Sign-out action
+
     private func signOut() {
         authService.signOut { result in
             switch result {

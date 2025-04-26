@@ -9,62 +9,55 @@ import SwiftUI
 
 struct WishlistView: View {
     @StateObject private var viewModel = WishlistViewModel()
-    @State private var expandedWishlistID: String? // Tracks expanded wishlist
-    
+
     var body: some View {
-        NavigationView {
-            VStack {
-                List {
+        ZStack(alignment: .bottomTrailing) {
+            ScrollView {
+                VStack(spacing: 20) {
                     ForEach(viewModel.wishlists, id: \.wishlistID) { wishlist in
-                        Section(header: WishlistHeader(wishlist: wishlist, expandedWishlistID: $expandedWishlistID)) {
-                            if expandedWishlistID == wishlist.wishlistID {
-                                Text("Items will go here") // Placeholder
+                        Button(action: {
+                            withAnimation {
+                                // Handle selection / navigation
                             }
+                        }) {
+                            HStack {
+                                Text(wishlist.title)
+                                    .font(.title3)
+                                    .padding(.leading)
+
+                                Spacer()
+
+                                Image(systemName: "arrow.right")
+                                    .font(.headline)
+                                    .padding(.trailing)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 70)
+                            .background(Color.gray.opacity(0.2))
+                            .cornerRadius(8)
+                            .padding(.horizontal)
                         }
                     }
                 }
+                .padding(.top)
             }
-            .navigationTitle("Wishlists")
-            .toolbar {
-                
-                // Add button for wishlist creation
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: {
-                        viewModel.isAddingWishlist = true
-                    }) {
-                        Image(systemName: "plus")
-                            .imageScale(.large)
-                    }
-                }
-            }
-            .sheet(isPresented: $viewModel.isAddingWishlist) {
-                AddWishlistView(viewModel: viewModel)
+
+            // Floating Button (overlayed)
+            Button(action: {
+                viewModel.isAddingWishlist = true
+            }) {
+                Image(systemName: "plus")
+                    .font(.title)
+                    .frame(width: 55, height: 55)
+                    .background(Color.white)
+                    .clipShape(Circle())
+                    .shadow(radius: 5)
+                    .padding()
             }
         }
-    }
-}
-
-// Expandable header
-struct WishlistHeader: View {
-    let wishlist: Wishlist
-    @Binding var expandedWishlistID: String?
-
-    var body: some View {
-        Button(action: {
-            withAnimation {
-                expandedWishlistID = (expandedWishlistID == wishlist.wishlistID) ? nil : wishlist.wishlistID
-            }
-        }) {
-            HStack {
-                Text(wishlist.title)
-                    .font(.headline)
-                Spacer()
-                Image(systemName: expandedWishlistID == wishlist.wishlistID ? "chevron.down" : "chevron.right")
-                    .foregroundColor(.gray)
-            }
-            .padding()
+        .sheet(isPresented: $viewModel.isAddingWishlist) {
+            AddWishlistView(viewModel: viewModel)
         }
-        .background(Color(UIColor.systemGroupedBackground))
-        .cornerRadius(10)
+
     }
 }
