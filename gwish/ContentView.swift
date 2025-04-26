@@ -14,7 +14,7 @@ struct ContentView: View {
     var body: some View {
         Group {
             if authService.isAuthenticated {
-                WishlistView()
+                MainView()
             } else {
                 LoginSignUpView()
             }

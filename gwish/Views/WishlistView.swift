@@ -10,8 +10,7 @@ import SwiftUI
 struct WishlistView: View {
     @StateObject private var viewModel = WishlistViewModel()
     @State private var expandedWishlistID: String? // Tracks expanded wishlist
-    @EnvironmentObject var authService: AuthService // Access AuthService to handle sign-out
-
+    
     var body: some View {
         NavigationView {
             VStack {
@@ -27,13 +26,6 @@ struct WishlistView: View {
             }
             .navigationTitle("Wishlists")
             .toolbar {
-                // Sign-out button
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: signOut) {
-                        Text("Sign Out")
-                            .foregroundColor(.red)
-                    }
-                }
                 
                 // Add button for wishlist creation
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -47,19 +39,6 @@ struct WishlistView: View {
             }
             .sheet(isPresented: $viewModel.isAddingWishlist) {
                 AddWishlistView(viewModel: viewModel)
-            }
-        }
-    }
-    // Sign-out action
-    private func signOut() {
-        authService.signOut { result in
-            switch result {
-            case .success:
-                // Handle successful sign-out (e.g., redirect to login view)
-                Logger.debug("Successfully signed out")
-            case .failure(let error):
-                // Handle error during sign-out
-                Logger.error("Sign-out failed: \(error.localizedDescription)")
             }
         }
     }
