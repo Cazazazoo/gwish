@@ -46,6 +46,7 @@ struct AddWishlistView: View {
 
                             if !draft.name.isEmpty {
                                 Button("Edit Details") {
+                                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                                     selectedDraftIndex = index
                                     showItemDetail = true
                                 }
