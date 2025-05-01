@@ -14,35 +14,62 @@ struct WishlistView: View {
         ZStack(alignment: .bottomTrailing) {
             ScrollView {
                 VStack(spacing: 20) {
-                    ForEach(viewModel.wishlists, id: \.wishlistID) { wishlist in
-                        Button(action: {
-                            withAnimation {
-                                // Handle selection / navigation
-                            }
-                        }) {
-                            HStack {
-                                Text(wishlist.title)
-                                    .font(.title3)
-                                    .padding(.leading)
+                    if viewModel.wishlists.isEmpty {
+                        Text("No Wishlists")
+                            .font(.headline)
+                            .padding()
+                    } else {
+                        ForEach(viewModel.wishlists) { wishlist in
+                            VStack(spacing: 0) {
+                                Button(action: {
+                                    if let wishlistID = wishlist.id {
+                                        withAnimation {
+                                            viewModel.toggleExpanded(wishlistID: wishlistID)
+                                            if viewModel.expandedWishlistIDs.contains(wishlistID),
+                                               (wishlist.items == nil || wishlist.items?.isEmpty == true) {
+                                                viewModel.fetchItems(forWishlistID: wishlistID)
+                                            }
+                                        }
+                                    }
+                                }) {
+                                    HStack {
+                                        Text(wishlist.title)
+                                            .font(.title3)
+                                            .padding(.leading)
 
-                                Spacer()
+                                        Spacer()
 
-                                Image(systemName: "arrow.right")
-                                    .font(.headline)
-                                    .padding(.trailing)
+                                        if let wishlistID = wishlist.id {
+                                            Image(systemName: viewModel.expandedWishlistIDs.contains(wishlistID) ? "chevron.down" : "chevron.right")
+                                                .font(.headline)
+                                                .padding(.trailing)
+                                        }
+                                    }
+                                    .frame(height: 60)
+                                    .contentShape(Rectangle()) // Improves tap area
+                                }
+                                .padding(.horizontal)
+
+                                if viewModel.expandedWishlistIDs.contains(wishlist.id ?? "") {
+                                    Divider()
+                                        .padding(.horizontal)
+
+                                    wishlistExpandedView(for: wishlist)
+                                        .padding(.top, 8)
+                                }
                             }
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 70)
-                            .background(Color.gray.opacity(0.2))
-                            .cornerRadius(8)
+                            .background(Color(.systemBackground))
+                            .cornerRadius(12)
+                            .shadow(color: .gray.opacity(0.2), radius: 4, x: 0, y: 2)
                             .padding(.horizontal)
+                            .padding(.top, 8)
                         }
                     }
                 }
                 .padding(.top)
+                .frame(maxWidth: .infinity, maxHeight: .infinity) // Force full height
             }
 
-            // Floating Button (overlayed)
             Button(action: {
                 viewModel.isAddingWishlist = true
             }) {
@@ -58,6 +85,101 @@ struct WishlistView: View {
         .sheet(isPresented: $viewModel.isAddingWishlist) {
             AddWishlistView(viewModel: viewModel)
         }
+        .onAppear {
+            viewModel.fetchWishlists()
+        }
+    }
 
+    // MARK: - Subviews
+
+    private func wishlistHeader(for wishlist: Wishlist) -> some View {
+        Button(action: {
+            if let wishlistID = wishlist.id {
+                withAnimation {
+                    // Toggle, add to list or remove
+                    viewModel.toggleExpanded(wishlistID: wishlistID)
+
+                    // If one of the expanded list, fetch items
+                    if viewModel.expandedWishlistIDs.contains(wishlistID),
+                       (wishlist.items == nil || wishlist.items?.isEmpty == true) {
+                        viewModel.fetchItems(forWishlistID: wishlistID)
+                    }
+                }
+            }
+        }) {
+            HStack {
+                Text(wishlist.title)
+                    .font(.title3)
+                    .padding(.leading)
+
+                Spacer()
+
+                if let wishlistID = wishlist.id {
+                    Image(systemName: viewModel.expandedWishlistIDs.contains(wishlistID) ? "chevron.down" : "chevron.right")
+                        .font(.headline)
+                        .padding(.trailing)
+                } else {
+                    Image(systemName: "chevron.right")
+                        .font(.headline)
+                        .padding(.trailing)
+                }
+            }
+            .frame(maxWidth: .infinity)
+            .frame(height: 70)
+            .background(Color.gray.opacity(0.2))
+            .cornerRadius(8)
+            .padding(.horizontal)
+        }
+    }
+
+    // Later, put some of these into their own views
+    private func wishlistExpandedView(for wishlist: Wishlist) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            if let items = wishlist.items, !items.isEmpty {
+                ForEach(items, id: \.id) { item in
+                    HStack {
+                        Text(item.name)
+                            .padding(.leading)
+
+                        Spacer()
+
+                        Button("Complete") {
+                            // TODO
+                        }
+                        .font(.caption)
+
+                        Button("Delete") {
+                            // TODO
+                        }
+                        .font(.caption)
+                        .foregroundColor(.red)
+                    }
+                    .padding(.horizontal)
+                }
+            } else {
+                Text("No items in this wishlist")
+                    .font(.subheadline)
+                    .foregroundColor(.gray)
+                    .padding(.horizontal)
+            }
+
+            Divider()
+                .padding(.horizontal)
+
+            HStack {
+                Button("Add an item") {
+                    // TODO
+                }
+
+                Spacer()
+
+                Button("Edit") {
+                    // TODO
+                }
+            }
+            .padding(.horizontal)
+            .padding(.bottom)
+        }
+        .transition(.opacity.combined(with: .move(edge: .top)))
     }
 }

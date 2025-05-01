@@ -14,6 +14,7 @@ class WishlistViewModel: ObservableObject {
     @Published var wishlists: [Wishlist] = []
     // TODO: Add     @Published var isLoading = false
     @Published var isAddingWishlist = false // Controls pop-up visibility
+    @Published var expandedWishlistIDs: Set<String> = []
     
     private let wishlistService: WishlistService
     private let itemService: ItemService
@@ -24,7 +25,14 @@ class WishlistViewModel: ObservableObject {
     ) {
         self.wishlistService = wishlistService
         self.itemService = itemService
-        fetchWishlists()
+    }
+    
+    func toggleExpanded(wishlistID: String) {
+        if expandedWishlistIDs.contains(wishlistID) {
+            expandedWishlistIDs.remove(wishlistID)
+        } else {
+            expandedWishlistIDs.insert(wishlistID)
+        }
     }
     
     // MARK: - Wishlist
@@ -89,6 +97,21 @@ class WishlistViewModel: ObservableObject {
                     self?.isAddingWishlist = false
                 case .failure(let error):
                     Logger.error("Error adding item: \(error.localizedDescription)")
+                }
+            }
+        }
+    }
+    
+    func fetchItems(forWishlistID wishlistID: String) {
+        itemService.fetchItems(forWishlist: wishlistID) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let items):
+                    if let index = self?.wishlists.firstIndex(where: { $0.id == wishlistID }) {
+                        self?.wishlists[index].items = items
+                    }
+                case .failure(let error):
+                    Logger.error("Error fetching items for wishlist: \(error.localizedDescription)")
                 }
             }
         }

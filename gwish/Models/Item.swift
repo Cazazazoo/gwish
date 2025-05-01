@@ -7,7 +7,8 @@
 
 import FirebaseFirestore
 
-struct Item: Codable {
+struct Item: Codable, Identifiable {
+    @DocumentID var id: String?
     var name: String
     var price: Double?
     var priority: Priority?
