@@ -12,6 +12,8 @@ struct WishlistView: View {
 
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
+            Color(red: 245/255, green: 245/255, blue: 255/255) // Soft lavender-tinted background
+                .ignoresSafeArea()
             ScrollView {
                 VStack(spacing: 20) {
                     if viewModel.wishlists.isEmpty {
@@ -33,8 +35,10 @@ struct WishlistView: View {
                                     }
                                 }) {
                                     HStack {
-                                        Text(wishlist.title)
+                                        Label(wishlist.title, systemImage: "gift.fill")
                                             .font(.title3)
+                                            .fontWeight(.semibold)
+//                                            .foregroundColor(Color.purple)
                                             .padding(.leading)
 
                                         Spacer()
@@ -58,9 +62,15 @@ struct WishlistView: View {
                                         .padding(.top, 8)
                                 }
                             }
-                            .background(Color(.systemBackground))
+                            .background(
+                                LinearGradient(
+                                    gradient: Gradient(colors: [Color.white, Color(red: 250/255, green: 250/255, blue: 255/255)]),
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                )
+                            )                            
                             .cornerRadius(12)
-                            .shadow(color: .gray.opacity(0.2), radius: 4, x: 0, y: 2)
+                            .shadow(color: Color.purple.opacity(0.15), radius: 6, x: 0, y: 3)
                             .padding(.horizontal)
                             .padding(.top, 8)
                         }
@@ -92,46 +102,6 @@ struct WishlistView: View {
 
     // MARK: - Subviews
 
-    private func wishlistHeader(for wishlist: Wishlist) -> some View {
-        Button(action: {
-            if let wishlistID = wishlist.id {
-                withAnimation {
-                    // Toggle, add to list or remove
-                    viewModel.toggleExpanded(wishlistID: wishlistID)
-
-                    // If one of the expanded list, fetch items
-                    if viewModel.expandedWishlistIDs.contains(wishlistID),
-                       (wishlist.items == nil || wishlist.items?.isEmpty == true) {
-                        viewModel.fetchItems(forWishlistID: wishlistID)
-                    }
-                }
-            }
-        }) {
-            HStack {
-                Text(wishlist.title)
-                    .font(.title3)
-                    .padding(.leading)
-
-                Spacer()
-
-                if let wishlistID = wishlist.id {
-                    Image(systemName: viewModel.expandedWishlistIDs.contains(wishlistID) ? "chevron.down" : "chevron.right")
-                        .font(.headline)
-                        .padding(.trailing)
-                } else {
-                    Image(systemName: "chevron.right")
-                        .font(.headline)
-                        .padding(.trailing)
-                }
-            }
-            .frame(maxWidth: .infinity)
-            .frame(height: 70)
-            .background(Color.gray.opacity(0.2))
-            .cornerRadius(8)
-            .padding(.horizontal)
-        }
-    }
-
     // Later, put some of these into their own views
     private func wishlistExpandedView(for wishlist: Wishlist) -> some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -147,6 +117,7 @@ struct WishlistView: View {
                             // TODO
                         }
                         .font(.caption)
+                        .foregroundColor(Color.green)
 
                         Button("Delete") {
                             // TODO
