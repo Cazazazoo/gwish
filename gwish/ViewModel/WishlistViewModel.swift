@@ -116,4 +116,17 @@ class WishlistViewModel: ObservableObject {
             }
         }
     }
+    
+    func updateItem(inWishlist wishlistID: String, itemID: String, item: Item) {
+        itemService.updateItem(inWishlist: wishlistID, itemID: itemID, item: item) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success:
+                    self?.fetchItems(forWishlistID: wishlistID)
+                case .failure(let error):
+                    Logger.error("Error updating item: \(error.localizedDescription)")
+                }
+            }
+        }
+    }
 }

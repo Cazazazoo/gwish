@@ -17,11 +17,4 @@ struct Wishlist: Codable, Identifiable {
     // TODO: add public/private
     
     var items: [Item]? = []
-    
-    // If Needed: decoded into the names of the struct
-//    enum CodingKeys: String, CodingKey {
-//        case name = "item_name"      // Mapping "item_name" in Firestore to "name" in struct
-//        case price = "item_price"    // Mapping "item_price" in Firestore to "price" in struct
-//        case priority = "item_priority" // Mapping "item_priority" in Firestore to "priority" in struct
-//    }
 }

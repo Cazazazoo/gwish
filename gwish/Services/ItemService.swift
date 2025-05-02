@@ -17,4 +17,8 @@ final class ItemService {
     func fetchItems(forWishlist wishlistID: String, completion: @escaping (Result<[Item], Error>) -> Void) {
         firestore.fetchSubdocuments(from: "wishlists", parentId: wishlistID, subcollection: "items", as: Item.self, completion: completion)
     }
+    
+    func updateItem(inWishlist wishlistID: String, itemID: String, item: Item, completion: @escaping (Result<Void, Error>) -> Void) {
+        firestore.updateSubdocument(in: "wishlists", parentId: wishlistID, subcollection: "items", documentId: itemID, with: item, completion: completion)
+    }
 }

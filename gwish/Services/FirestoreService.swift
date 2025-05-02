@@ -78,6 +78,25 @@ final class FirestoreService {
                 completion(.success(documents))
             }
     }
+    
+    // MARK: - Update Subdocument
+    func updateSubdocument<T: Encodable>(in parentCollection: String, parentId: String, subcollection: String, documentId: String, with data: T, completion: @escaping (Result<Void, Error>) -> Void) {
+        do {
+            try db.collection(parentCollection)
+                .document(parentId)
+                .collection(subcollection)
+                .document(documentId)
+                .setData(from: data, merge: true) { error in
+                    if let error = error {
+                        completion(.failure(error))
+                    } else {
+                        completion(.success(()))
+                    }
+                }
+        } catch {
+            completion(.failure(error))
+        }
+    }
 }
 
 

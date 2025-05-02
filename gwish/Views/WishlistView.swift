@@ -9,6 +9,8 @@ import SwiftUI
 
 struct WishlistView: View {
     @StateObject private var viewModel = WishlistViewModel()
+    @State private var selectedItemDraft: ItemDraft? = nil
+    @State private var currentEditingWishlistID: String? = nil
 
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
@@ -92,9 +94,25 @@ struct WishlistView: View {
                     .padding()
             }
         }
+        // Adding wishlist
         .sheet(isPresented: $viewModel.isAddingWishlist) {
             AddWishlistView(viewModel: viewModel)
         }
+        // Editing item from drop-down
+        .sheet(item: $selectedItemDraft) { draft in
+            ItemDetailView(
+                item: draft,
+                mode: .edit,
+                onDone: { updatedDraft in
+                    if let wishlistID = currentEditingWishlistID {
+                        let updatedItem = updatedDraft.toItem()
+                        viewModel.updateItem(inWishlist: wishlistID, itemID: draft.id, item: updatedItem)
+                    }
+                    currentEditingWishlistID = nil
+                }
+            )
+        }
+        // Adding item from drop-down
         .onAppear {
             viewModel.fetchWishlists()
         }
@@ -109,8 +127,15 @@ struct WishlistView: View {
                 ForEach(items, id: \.id) { item in
                     HStack {
                         Text(item.name)
+                            .underline()
+                            .onTapGesture {
+                                selectedItemDraft = ItemDraft(from: item)
+                                currentEditingWishlistID = wishlist.id
+                            }
+                            .strikethrough(item.complete == true)
+                            .foregroundColor(item.complete == true ? .gray : .primary)
                             .padding(.leading)
-
+                        
                         Spacer()
 
                         Button("Complete") {

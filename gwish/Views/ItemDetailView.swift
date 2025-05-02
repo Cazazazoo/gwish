@@ -11,45 +11,42 @@ enum ItemDetailMode {
     case add, edit
 }
 
-struct ItemDraft {
-    var name = ""
-    var price = ""
-    var priority: Priority = .none
-    var location = "" // Probably leave as string
-    // TODO: these item descriptors following my model
-    var link = ""
-    var category = ""
-    var occasion = ""
-}
-
 struct ItemDetailView: View {
-    @Binding var item: ItemDraft
+    var item: ItemDraft
+    @State private var draft: ItemDraft
+
     @Environment(\.dismiss) var dismiss
     var mode: ItemDetailMode = .add
-    var onDelete: (() -> Void)? = nil // TODO: delete and complete
-    var onComplete: (() -> Void)? = nil
-
+    var onDone: ((ItemDraft) -> Void)? = nil
+    
+    init(item: ItemDraft, mode: ItemDetailMode = .add, onDone: ((ItemDraft) -> Void)? = nil) {
+        self.item = item
+        self.mode = mode
+        self._draft = State(initialValue: item)
+        self.onDone = onDone
+    }
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Item Details")
                 .font(.title2).bold()
 
             Group {
-                TextField("Name", text: $item.name)
-                TextField("Price", text: $item.price)
-                    .keyboardType(.decimalPad)
+                TextField("Name", text: $draft.name)
+                TextField("Price", text: $draft.price)
+                    .keyboardType(.decimalPad) // TODO: not sure if i like this format
 
-                Picker("Priority", selection: $item.priority) {
+                Picker("Priority", selection: $draft.priority) {
                     ForEach(Priority.allCases, id: \.self) {
                         Text($0.rawValue.capitalized)
                     }
                 }
                 .pickerStyle(SegmentedPickerStyle())
 
-                TextField("Link", text: $item.link)
-                TextField("Location", text: $item.location)
-                TextField("Category", text: $item.category)
-                TextField("Occasion", text: $item.occasion)
+                TextField("Link", text: $draft.link)
+                TextField("Location", text: $draft.location)
+                TextField("Category", text: $draft.category)
+                TextField("Occasion", text: $draft.occasion)
             }
             .textFieldStyle(RoundedBorderTextFieldStyle())
 
@@ -58,13 +55,14 @@ struct ItemDetailView: View {
             if mode == .edit {
                 HStack {
                     Button("Complete") {
-                        onComplete?()
+                        draft.complete = true
                     }
+                    .foregroundColor(.green)
 
                     Spacer()
 
                     Button("Delete") {
-                        onDelete?()
+                        // TODO: add delete from wishlistviewmodel
                     }
                     .foregroundColor(.red)
                 }
@@ -72,6 +70,7 @@ struct ItemDetailView: View {
             }
 
             Button("Done") {
+                onDone?(draft)
                 dismiss()
             }
             .bold()

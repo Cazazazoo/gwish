@@ -11,10 +11,11 @@ import FirebaseCore
 struct AddWishlistView: View {
     @ObservedObject var viewModel: WishlistViewModel
     @State private var itemDrafts: [ItemDraft] = [ItemDraft()]
-    @State private var showItemDetail = false
+//    @State private var showItemDetail = false
     @State private var selectedDraftIndex: Int? = nil
     @State private var wishlistTitle = ""
     @State private var addItem = false // Toggle for showing item input
+    @State private var editingDraft: ItemDraft? = nil
 
     var body: some View {
         VStack(spacing: 20) {
@@ -48,7 +49,7 @@ struct AddWishlistView: View {
                                 Button("Edit Details") {
                                     UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                                     selectedDraftIndex = index
-                                    showItemDetail = true
+                                    editingDraft = draft
                                 }
                             }
                         }
@@ -84,22 +85,9 @@ struct AddWishlistView: View {
                 Spacer()
 
                 Button("Save") {
-                    let newItems: [Item] = itemDrafts
+                    let newItems = itemDrafts
                         .filter { !$0.name.isEmpty }
-                        .map { draft in
-                            Item(
-                                name: draft.name,
-                                price: Double(draft.price),
-                                priority: draft.priority == .none ? nil : draft.priority,
-                                url: draft.link.isEmpty ? nil : [draft.link],
-                                location: draft.location.isEmpty ? nil : draft.location,
-                                creationDate: Timestamp(date: Date()),
-                                category: nil,
-                                occasion: nil,
-                                status: nil
-                            )
-                        }
-                    
+                        .map { $0.toItem() }
                     viewModel.createWishlist(title: wishlistTitle, initialItems: newItems)
                 }
                 .padding()
@@ -111,10 +99,14 @@ struct AddWishlistView: View {
         .cornerRadius(10)
         .shadow(radius: 10)
         .padding()
-        .sheet(isPresented: $showItemDetail) {
-            if let index = selectedDraftIndex {
-                ItemDetailView(item: $itemDrafts[index], mode: .add)
-            }
+        .sheet(item: $editingDraft) { draft in
+            ItemDetailView(item: draft, mode: .add, onDone: { updated in
+                if let index = selectedDraftIndex {
+                    itemDrafts[index] = updated
+                }
+                selectedDraftIndex = nil
+                editingDraft = nil
+            })
         }
     }
 }
