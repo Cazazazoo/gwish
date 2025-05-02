@@ -15,6 +15,7 @@ struct Item: Codable, Identifiable {
     var url: [String]? // In viewmodel, change to url if anything
     var location: String?
     var creationDate: Timestamp
+    // Include last updated for filter purposes?
     var complete: Bool?
     // Collections below
     var category: DocumentReference? // Reference to Category

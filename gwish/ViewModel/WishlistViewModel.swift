@@ -27,6 +27,8 @@ class WishlistViewModel: ObservableObject {
         self.itemService = itemService
     }
     
+    // MARK: - Toggles
+    
     func toggleExpanded(wishlistID: String) {
         if expandedWishlistIDs.contains(wishlistID) {
             expandedWishlistIDs.remove(wishlistID)
@@ -35,15 +37,23 @@ class WishlistViewModel: ObservableObject {
         }
     }
     
+    func toggleItemComplete(inWishlist wishlistID: String, item: Item) {
+        var updatedItem = item
+        updatedItem.complete = !(item.complete ?? false)
+
+        updateItem(inWishlist: wishlistID, itemID: item.id ?? "", item: updatedItem)
+    }
+    
     // MARK: - Wishlist
     
-    func fetchWishlists() {
+    func fetchWishlists(completion: (() -> Void)? = nil) {
         guard let userID = Auth.auth().currentUser?.uid else { return }
         wishlistService.fetchWishlists(forUser: userID) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let wishlists):
                     self?.wishlists = wishlists
+                    completion?()
                 case .failure(let error):
                     // Handle the error (e.g., show an alert)
                     Logger.error("Error fetching wishlists: \(error.localizedDescription)")
@@ -93,8 +103,12 @@ class WishlistViewModel: ObservableObject {
             DispatchQueue.main.async {
                 switch result {
                 case .success:
-                    self?.fetchWishlists()
-                    self?.isAddingWishlist = false
+                    self?.fetchWishlists {
+                        // After fetching wishlists, re-fetch items for expanded ones
+                        for id in self?.expandedWishlistIDs ?? [] {
+                            self?.fetchItems(fromWishlistID: id) // runs after list is refreshed
+                        }
+                    }
                 case .failure(let error):
                     Logger.error("Error adding item: \(error.localizedDescription)")
                 }
@@ -102,8 +116,8 @@ class WishlistViewModel: ObservableObject {
         }
     }
     
-    func fetchItems(forWishlistID wishlistID: String) {
-        itemService.fetchItems(forWishlist: wishlistID) { [weak self] result in
+    func fetchItems(fromWishlistID wishlistID: String) {
+        itemService.fetchItems(fromWishlist: wishlistID) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let items):
@@ -122,9 +136,27 @@ class WishlistViewModel: ObservableObject {
             DispatchQueue.main.async {
                 switch result {
                 case .success:
-                    self?.fetchItems(forWishlistID: wishlistID)
+                    self?.fetchItems(fromWishlistID: wishlistID)
                 case .failure(let error):
                     Logger.error("Error updating item: \(error.localizedDescription)")
+                }
+            }
+        }
+    }
+    
+    func deleteItem(fromWishlist wishlistID: String, item: Item) {
+        guard let itemId = item.id else {
+            Logger.error("Missing item ID for deletion")
+            return
+        }
+
+        itemService.deleteItem(fromWishlist: wishlistID, itemID: itemId) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success:
+                    self?.fetchItems(fromWishlistID: wishlistID)
+                case .failure(let error):
+                    Logger.error("Error deleting item: \(error.localizedDescription)")
                 }
             }
         }

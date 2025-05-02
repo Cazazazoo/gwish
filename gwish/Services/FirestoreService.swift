@@ -73,7 +73,7 @@ final class FirestoreService {
                     completion(.failure(error))
                     return
                 }
-
+                
                 let documents = snapshot?.documents.compactMap { try? $0.data(as: T.self) } ?? []
                 completion(.success(documents))
             }
@@ -96,6 +96,21 @@ final class FirestoreService {
         } catch {
             completion(.failure(error))
         }
+    }
+    
+    // MARK: - Delete Subdocument
+    func deleteSubdocument(from parentCollection: String, parentId: String, subcollection: String, documentId: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        db.collection(parentCollection)
+            .document(parentId)
+            .collection(subcollection)
+            .document(documentId)
+            .delete { error in
+                if let error = error {
+                    completion(.failure(error))
+                } else {
+                    completion(.success(()))
+                }
+            }
     }
 }
 

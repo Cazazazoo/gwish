@@ -12,18 +12,22 @@ enum ItemDetailMode {
 }
 
 struct ItemDetailView: View {
-    var item: ItemDraft
+    var item: ItemDraft // Keep for revert or reset details one day
+    // Copy
     @State private var draft: ItemDraft
 
     @Environment(\.dismiss) var dismiss
     var mode: ItemDetailMode = .add
-    var onDone: ((ItemDraft) -> Void)? = nil
     
-    init(item: ItemDraft, mode: ItemDetailMode = .add, onDone: ((ItemDraft) -> Void)? = nil) {
+    var onDone: ((ItemDraft) -> Void)? = nil
+    var onDelete: ((ItemDraft) -> Void)? = nil
+    
+    init(item: ItemDraft, mode: ItemDetailMode = .add, onDone: ((ItemDraft) -> Void)? = nil, onDelete: ((ItemDraft) -> Void)? = nil) {
         self.item = item
         self.mode = mode
         self._draft = State(initialValue: item)
         self.onDone = onDone
+        self.onDelete = onDelete
     }
     
     var body: some View {
@@ -54,15 +58,16 @@ struct ItemDetailView: View {
 
             if mode == .edit {
                 HStack {
-                    Button("Complete") {
-                        draft.complete = true
+                    Button(draft.complete ? "Mark Incomplete" : "Mark Complete") {
+                        draft.complete.toggle()
                     }
-                    .foregroundColor(.green)
+                    .foregroundColor(draft.complete ? .orange : .green)
 
                     Spacer()
 
                     Button("Delete") {
-                        // TODO: add delete from wishlistviewmodel
+                        onDelete?(draft)
+                        dismiss()
                     }
                     .foregroundColor(.red)
                 }

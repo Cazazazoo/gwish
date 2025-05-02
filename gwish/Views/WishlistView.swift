@@ -9,9 +9,12 @@ import SwiftUI
 
 struct WishlistView: View {
     @StateObject private var viewModel = WishlistViewModel()
+    // Updating items
     @State private var selectedItemDraft: ItemDraft? = nil
     @State private var currentEditingWishlistID: String? = nil
-
+    // Adding items
+    @State private var wishlistIDForNewItem: WishlistIDWrapper? = nil
+    
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
             Color(red: 245/255, green: 245/255, blue: 255/255) // Soft lavender-tinted background
@@ -31,7 +34,7 @@ struct WishlistView: View {
                                             viewModel.toggleExpanded(wishlistID: wishlistID)
                                             if viewModel.expandedWishlistIDs.contains(wishlistID),
                                                (wishlist.items == nil || wishlist.items?.isEmpty == true) {
-                                                viewModel.fetchItems(forWishlistID: wishlistID)
+                                                viewModel.fetchItems(fromWishlistID: wishlistID)
                                             }
                                         }
                                     }
@@ -40,11 +43,11 @@ struct WishlistView: View {
                                         Label(wishlist.title, systemImage: "gift.fill")
                                             .font(.title3)
                                             .fontWeight(.semibold)
-//                                            .foregroundColor(Color.purple)
+                                        //                                            .foregroundColor(Color.purple)
                                             .padding(.leading)
-
+                                        
                                         Spacer()
-
+                                        
                                         if let wishlistID = wishlist.id {
                                             Image(systemName: viewModel.expandedWishlistIDs.contains(wishlistID) ? "chevron.down" : "chevron.right")
                                                 .font(.headline)
@@ -55,11 +58,11 @@ struct WishlistView: View {
                                     .contentShape(Rectangle()) // Improves tap area
                                 }
                                 .padding(.horizontal)
-
+                                
                                 if viewModel.expandedWishlistIDs.contains(wishlist.id ?? "") {
                                     Divider()
                                         .padding(.horizontal)
-
+                                    
                                     wishlistExpandedView(for: wishlist)
                                         .padding(.top, 8)
                                 }
@@ -70,7 +73,7 @@ struct WishlistView: View {
                                     startPoint: .top,
                                     endPoint: .bottom
                                 )
-                            )                            
+                            )
                             .cornerRadius(12)
                             .shadow(color: Color.purple.opacity(0.15), radius: 6, x: 0, y: 3)
                             .padding(.horizontal)
@@ -81,7 +84,7 @@ struct WishlistView: View {
                 .padding(.top)
                 .frame(maxWidth: .infinity, maxHeight: .infinity) // Force full height
             }
-
+            
             Button(action: {
                 viewModel.isAddingWishlist = true
             }) {
@@ -113,44 +116,30 @@ struct WishlistView: View {
             )
         }
         // Adding item from drop-down
+        .sheet(item: $wishlistIDForNewItem) { wishlistID in
+            ItemDetailView(
+                item: ItemDraft(),
+                mode: .add,
+                onDone: { draft in
+                    let newItem = draft.toItem()
+                    viewModel.addItem(toWishlist: wishlistID.id, item: newItem)
+                    wishlistIDForNewItem = nil
+                }
+            )
+        }
         .onAppear {
             viewModel.fetchWishlists()
         }
     }
-
+    
     // MARK: - Subviews
-
+    
     // Later, put some of these into their own views
     private func wishlistExpandedView(for wishlist: Wishlist) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             if let items = wishlist.items, !items.isEmpty {
                 ForEach(items, id: \.id) { item in
-                    HStack {
-                        Text(item.name)
-                            .underline()
-                            .onTapGesture {
-                                selectedItemDraft = ItemDraft(from: item)
-                                currentEditingWishlistID = wishlist.id
-                            }
-                            .strikethrough(item.complete == true)
-                            .foregroundColor(item.complete == true ? .gray : .primary)
-                            .padding(.leading)
-                        
-                        Spacer()
-
-                        Button("Complete") {
-                            // TODO
-                        }
-                        .font(.caption)
-                        .foregroundColor(Color.green)
-
-                        Button("Delete") {
-                            // TODO
-                        }
-                        .font(.caption)
-                        .foregroundColor(.red)
-                    }
-                    .padding(.horizontal)
+                    wishlistItemRow(item: item, wishlistID: wishlist.id)
                 }
             } else {
                 Text("No items in this wishlist")
@@ -158,17 +147,20 @@ struct WishlistView: View {
                     .foregroundColor(.gray)
                     .padding(.horizontal)
             }
-
+            
             Divider()
                 .padding(.horizontal)
-
+            
             HStack {
+                // TODO: add loading indicator?
                 Button("Add an item") {
-                    // TODO
+                    if let id = wishlist.id {
+                        wishlistIDForNewItem = WishlistIDWrapper(id: id)
+                    }
                 }
-
+                
                 Spacer()
-
+                
                 Button("Edit") {
                     // TODO
                 }
@@ -178,4 +170,41 @@ struct WishlistView: View {
         }
         .transition(.opacity.combined(with: .move(edge: .top)))
     }
+    
+    private func wishlistItemRow(item: Item, wishlistID: String?) -> some View {
+        HStack {
+            Text(item.name)
+                .underline()
+                .onTapGesture {
+                    selectedItemDraft = ItemDraft(from: item)
+                    currentEditingWishlistID = wishlistID
+                }
+                .strikethrough(item.complete == true)
+                .foregroundColor(item.complete == true ? .gray : .primary)
+                .padding(.leading)
+            
+            Spacer()
+            
+            Button(item.complete == true ? "Incomplete" : "Complete") {
+                if let wishlistID = wishlistID {
+                    viewModel.toggleItemComplete(inWishlist: wishlistID, item: item)
+                }
+            }
+            .font(.caption)
+            .foregroundColor(item.complete == true ? .orange : .green)
+            
+            Button("Delete") {
+                if let itemID = item.id, let wishlistID = wishlistID {
+                    viewModel.deleteItem(fromWishlist: wishlistID, item: item)
+                }
+            }
+            .font(.caption)
+            .foregroundColor(.red)
+        }
+        .padding(.horizontal)
+    }
+}
+
+private struct WishlistIDWrapper: Identifiable {
+    let id: String
 }
