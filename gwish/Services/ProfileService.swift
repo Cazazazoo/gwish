@@ -12,39 +12,23 @@ final class ProfileService {
     private let firestore = FirestoreService.shared
     private let collectionPath = "profiles"
 
-    // MARK: - Create Profile
-    func createProfile(for userId: String, profile: Profile, completion: @escaping (Result<Void, Error>) -> Void) {
-        firestore.updateDocument(in: collectionPath, documentId: userId, with: profile, completion: completion)
+    func createProfile(_ profile: Profile, completion: @escaping (Result<DocumentReference, Error>) -> Void) {
+        firestore.addDocument(to: collectionPath, data: profile, completion: completion)
     }
 
-    // MARK: - Fetch Profile
     func fetchProfiles(for userId: String, completion: @escaping (Result<[Profile], Error>) -> Void) {
-        Firestore.firestore()
-            .collection(collectionPath)
-            .whereField("userID", isEqualTo: userId)
-            .getDocuments { snapshot, error in
-                if let error = error {
-                    completion(.failure(error))
-                    return
-                }
-
-                do {
-                    let profiles = try snapshot?.documents.compactMap {
-                        try $0.data(as: Profile.self)
-                    } ?? []
-                    completion(.success(profiles))
-                } catch {
-                    completion(.failure(error))
-                }
-            }
+        firestore.fetchDocuments(from: collectionPath, as: Profile.self, whereField: "userID", isEqualTo: userId, completion: completion)
     }
 
-    // MARK: - Update Profile
-    func updateProfile(for profileId: String, profile: Profile, completion: @escaping (Result<Void, Error>) -> Void) {
-        firestore.updateDocument(in: collectionPath, documentId: profileId, with: profile, completion: completion)
+    func updateProfile(_ profile: Profile, completion: @escaping (Result<Void, Error>) -> Void) {
+        guard let id = profile.id else {
+            completion(.failure(NSError(domain: "ProfileService", code: -1, userInfo: [NSLocalizedDescriptionKey: "Missing profile ID"])))
+            return
+        }
+
+        firestore.updateDocument(in: collectionPath, documentId: id, with: profile, completion: completion)
     }
 
-    // MARK: - Connect Profiles
     func connectProfiles(userId: String, to connectedUserId: String, completion: @escaping (Result<Void, Error>) -> Void) {
 //        let ref = Firestore.firestore().collection(collectionPath).document(connectedUserId)
         Firestore.firestore().collection(collectionPath)
@@ -59,29 +43,45 @@ final class ProfileService {
     }
     
     /// Deletes a profile and handles cleanup (wishlists + connected profiles)
-    func deleteProfile(profileId: String, completion: @escaping (Result<Void, Error>) -> Void) {
+    func deleteProfile(_ profile: Profile, completion: @escaping (Result<Void, Error>) -> Void) {
         let db = Firestore.firestore()
-
-        // Step 1: Delete wishlists tied to this profile
-        db.collection("users").document(profileId).collection("wishlists").getDocuments { snapshot, error in
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
-
-            let batch = db.batch()
-            snapshot?.documents.forEach { batch.deleteDocument($0.reference) }
-
-            // Step 2: Commit deletion of wishlists
-            batch.commit { batchError in
-                if let batchError = batchError {
-                    completion(.failure(batchError))
+        
+        guard let profileId = profile.id else {
+            completion(.failure(NSError(domain: "ProfileService", code: -1, userInfo: [NSLocalizedDescriptionKey: "Missing profile ID"])))
+            return
+        }
+        
+        // Step 1: Query wishlists where user is the owner (allowed by rules)
+        db.collection("wishlists")
+            .whereField("userID", isEqualTo: profile.userID)
+            .getDocuments { snapshot, error in
+                if let error = error {
+                    completion(.failure(error))
                     return
                 }
+                
+                let batch = db.batch()
+                
+                // Step 2: Filter only wishlists with matching profileID
+                let wishlistsToDelete = snapshot?.documents.filter {
+                    $0.data()["profileID"] as? String == profileId
+                } ?? []
+                
+                wishlistsToDelete.forEach { batch.deleteDocument($0.reference) }
 
-                // Step 3: Delete the profile document using FirestoreService
-                FirestoreService.shared.deleteDocument(from: "users", documentId: profileId, completion: completion)
+                // Step 3: Commit wishlist deletions and then delete the profile
+                batch.commit { batchError in
+                    if let batchError = batchError {
+                        completion(.failure(batchError))
+                        return
+                    }
+
+                    FirestoreService.shared.deleteDocument(
+                        from: self.collectionPath,
+                        documentId: profileId,
+                        completion: completion
+                    )
+                }
             }
-        }
     }
 }

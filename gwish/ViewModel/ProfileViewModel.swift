@@ -35,7 +35,7 @@ class ProfileViewModel: ObservableObject {
     func addProfile(from draft: ProfileDraft) {
         guard let userID = Auth.auth().currentUser?.uid else { return }
         let profile = draft.toProfile(userID: userID)
-        profileService.createProfile(for: userID, profile: profile) { [weak self] result in
+        profileService.createProfile(profile) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success:
@@ -49,11 +49,11 @@ class ProfileViewModel: ObservableObject {
 
     func updateProfile(from draft: ProfileDraft, originalProfile: Profile) {
         guard let profileID = originalProfile.id else { return }
-        let profile = draft.toProfile(userID: originalProfile.userID) // preserve ID and user
-        var updated = profile
-        updated.id = profileID
 
-        profileService.updateProfile(for: profileID, profile: updated) { [weak self] result in
+        var updated = draft.toProfile(userID: originalProfile.userID)
+        updated.id = profileID //
+
+        profileService.updateProfile(updated) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success:
@@ -68,7 +68,7 @@ class ProfileViewModel: ObservableObject {
     func deleteProfile(_ profile: Profile) {
         guard let profileId = profile.id else { return }
         
-        profileService.deleteProfile(profileId: profileId) { [weak self] result in
+        profileService.deleteProfile(profile) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success:
