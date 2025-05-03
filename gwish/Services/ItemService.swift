@@ -10,8 +10,17 @@ import Foundation
 final class ItemService {
     private let firestore = FirestoreService.shared
 
-    func addItem(toWishlist wishlistID: String, item: Item, completion: @escaping (Result<Void, Error>) -> Void) {
-        firestore.addSubdocument(to: "wishlists", parentId: wishlistID, subcollection: "items", data: item, completion: completion)
+    func addItem(toWishlist wishlistID: String, item: Item, completion: @escaping (Result<Item, Error>) -> Void) {
+        firestore.addSubdocument(to: "wishlists", parentId: wishlistID, subcollection: "items", data: item) { result in
+            switch result {
+            case .success(let ref):
+                var newItem = item
+                newItem.id = ref.documentID 
+                completion(.success(newItem))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
     }
 
     func fetchItems(fromWishlist wishlistID: String, completion: @escaping (Result<[Item], Error>) -> Void) {

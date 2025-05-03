@@ -47,7 +47,7 @@ struct WishlistView: View {
                                         withAnimation {
                                             viewModel.toggleExpanded(wishlistID: wishlistID)
                                             if viewModel.expandedWishlistIDs.contains(wishlistID),
-                                               (wishlist.items == nil || wishlist.items?.isEmpty == true) {
+                                               viewModel.wishlistItems[wishlistID]?.isEmpty ?? true {
                                                 viewModel.fetchItems(fromWishlistID: wishlistID)
                                             }
                                         }
@@ -97,6 +97,10 @@ struct WishlistView: View {
                 }
                 .padding(.top)
                 .frame(maxWidth: .infinity, maxHeight: .infinity) // Force full height
+                // Make room for FAB
+                .safeAreaInset(edge: .bottom) {
+                    Spacer().frame(height: 80)
+                }
             }
             
             Button(action: {
@@ -147,8 +151,6 @@ struct WishlistView: View {
                 WishlistDetailView(
                     wishlist: wishlist,
                     onSave: { newTitle, isPublic in
-                        guard let wishlistID = wishlist.id else { return }
-
                         var updated = wishlist
                         updated.title = newTitle
                         updated.isPublic = isPublic
@@ -174,7 +176,7 @@ struct WishlistView: View {
     // Later, put some of these into their own views
     private func wishlistExpandedView(for wishlist: Wishlist) -> some View {
         VStack(alignment: .leading, spacing: 12) {
-            if let items = wishlist.items, !items.isEmpty {
+            if let wishlistID = wishlist.id, let items = viewModel.wishlistItems[wishlistID], !items.isEmpty {
                 ForEach(items, id: \.id) { item in
                     wishlistItemRow(item: item, wishlistID: wishlist.id)
                 }

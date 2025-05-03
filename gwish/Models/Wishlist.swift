@@ -16,5 +16,4 @@ struct Wishlist: Codable, Identifiable {
     var isPublic: Bool? // Optional for now
     // TODO: add profileID for making a wishlist for frined
     
-    var items: [Item]? = []
 }

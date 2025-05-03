@@ -12,6 +12,7 @@ import FirebaseFirestore
 class WishlistViewModel: ObservableObject {
     @Published var wishlists: [Wishlist] = []
     @Published var expandedWishlistIDs: Set<String> = []
+    @Published var wishlistItems: [String: [Item]] = [:]  // key: wishlistID
     // TODO: Add     @Published var isLoading = false
     
     // Services
@@ -100,14 +101,10 @@ class WishlistViewModel: ObservableObject {
             DispatchQueue.main.async {
                 switch result {
                 case .success:
-                    self?.fetchWishlists() // Refresh to reflect updates
-                    
-                    // Re-fetch items for the updated wishlist
+                    self?.fetchWishlists()
                     if let wishlistID = wishlist.id {
-                        Logger.info("NEW ISSUE")
                         self?.fetchItems(fromWishlistID: wishlistID)
                     }
-                    
                 case .failure(let error):
                     Logger.error("Error updating wishlist: \(error.localizedDescription)")
                 }
@@ -132,20 +129,13 @@ class WishlistViewModel: ObservableObject {
     
     func addItem(toWishlist wishlistID: String, item: Item) {
         // No empty names
-        guard !item.name.trimmingCharacters(in: .whitespaces).isEmpty else {
-            return
-        }
-        
+        guard !item.name.trimmingCharacters(in: .whitespaces).isEmpty else { return }
+
         itemService.addItem(toWishlist: wishlistID, item: item) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
-                case .success:
-                    self?.fetchWishlists {
-                        // After fetching wishlists, re-fetch items for expanded ones
-                        for id in self?.expandedWishlistIDs ?? [] {
-                            self?.fetchItems(fromWishlistID: id) // runs after list is refreshed
-                        }
-                    }
+                case .success(let newItem):
+                    self?.wishlistItems[wishlistID, default: []].append(newItem)
                 case .failure(let error):
                     Logger.error("Error adding item: \(error.localizedDescription)")
                 }
@@ -158,11 +148,9 @@ class WishlistViewModel: ObservableObject {
             DispatchQueue.main.async {
                 switch result {
                 case .success(let items):
-                    if let index = self?.wishlists.firstIndex(where: { $0.id == wishlistID }) {
-                        self?.wishlists[index].items = items
-                    }
+                    self?.wishlistItems[wishlistID] = items
                 case .failure(let error):
-                    Logger.error("Error fetching items for wishlist: \(error.localizedDescription)")
+                    Logger.error("Error fetching items for wishlist \(wishlistID): \(error.localizedDescription)")
                 }
             }
         }
@@ -173,7 +161,13 @@ class WishlistViewModel: ObservableObject {
             DispatchQueue.main.async {
                 switch result {
                 case .success:
-                    self?.fetchItems(fromWishlistID: wishlistID)
+                    guard var items = self?.wishlistItems[wishlistID] else { return }
+                    if let index = items.firstIndex(where: { $0.id == itemID }) {
+                        var updated = item
+                        updated.id = itemID
+                        items[index] = updated
+                        self?.wishlistItems[wishlistID] = items
+                    }
                 case .failure(let error):
                     Logger.error("Error updating item: \(error.localizedDescription)")
                 }
@@ -191,7 +185,7 @@ class WishlistViewModel: ObservableObject {
             DispatchQueue.main.async {
                 switch result {
                 case .success:
-                    self?.fetchItems(fromWishlistID: wishlistID)
+                    self?.wishlistItems[wishlistID]?.removeAll(where: { $0.id == itemId })
                 case .failure(let error):
                     Logger.error("Error deleting item: \(error.localizedDescription)")
                 }

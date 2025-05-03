@@ -73,19 +73,14 @@ final class FirestoreService {
     }
 
     // MARK: - Add Subdocument
-    func addSubdocument<T: Encodable>(to parentCollection: String, parentId: String, subcollection: String, data: T, completion: @escaping (Result<Void, Error>) -> Void) {
+    func addSubdocument<T: Encodable>(to parentCollection: String, parentId: String, subcollection: String, data: T, completion: @escaping (Result<DocumentReference, Error>) -> Void) {
         do {
-            let _ = try db
+            let ref = try db
                 .collection(parentCollection)
                 .document(parentId)
                 .collection(subcollection)
-                .addDocument(from: data) { error in
-                    if let error = error {
-                        completion(.failure(error))
-                    } else {
-                        completion(.success(()))
-                    }
-                }
+                .addDocument(from: data)
+            completion(.success(ref))
         } catch {
             completion(.failure(error))
         }
