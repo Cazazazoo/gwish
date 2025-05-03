@@ -9,7 +9,7 @@ import SwiftUI
 import FirebaseCore
 
 struct AddWishlistView: View {
-    @ObservedObject var viewModel: WishlistViewModel
+    var onSave: (_ title: String, _ items: [Item]) -> Void
     @Environment(\.dismiss) private var dismiss
     @State private var itemDrafts: [ItemDraft] = [ItemDraft()]
     @State private var selectedDraftIndex: Int? = nil
@@ -88,7 +88,7 @@ struct AddWishlistView: View {
                     let newItems = itemDrafts
                         .filter { !$0.name.isEmpty }
                         .map { $0.toItem() }
-                    viewModel.createWishlist(title: wishlistTitle, initialItems: newItems)
+                    onSave(wishlistTitle, newItems)
                     dismiss()
                 }
                 .padding()

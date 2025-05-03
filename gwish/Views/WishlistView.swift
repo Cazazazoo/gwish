@@ -110,7 +110,12 @@ struct WishlistView: View {
         .sheet(item: $activeModal) { modal in
             switch modal {
             case .addWishlist:
-                AddWishlistView(viewModel: viewModel)
+                AddWishlistView(
+                    onSave: { title, items in
+                        viewModel.createWishlist(title: title, initialItems: items)
+                        activeModal = nil
+                    }
+                )
                 
             case .editItem(let draft, let wishlistID):
                 ItemDetailView(
