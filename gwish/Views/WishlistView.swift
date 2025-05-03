@@ -194,7 +194,7 @@ struct WishlistView: View {
             .foregroundColor(item.complete == true ? .orange : .green)
             
             Button("Delete") {
-                if let itemID = item.id, let wishlistID = wishlistID {
+                if let wishlistID = wishlistID {
                     viewModel.deleteItem(fromWishlist: wishlistID, item: item)
                 }
             }

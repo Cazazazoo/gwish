@@ -99,6 +99,11 @@ class WishlistViewModel: ObservableObject {
     // MARK: - Item
     
     func addItem(toWishlist wishlistID: String, item: Item) {
+        // No empty names
+        guard !item.name.trimmingCharacters(in: .whitespaces).isEmpty else {
+            return
+        }
+        
         itemService.addItem(toWishlist: wishlistID, item: item) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
