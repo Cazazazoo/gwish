@@ -12,9 +12,9 @@ struct Wishlist: Codable, Identifiable {
     var title: String
     var lastUpdated: Timestamp
     var userID: String
-    // TODO: add profileID for making a wishlist for frined
     var creationDate: Timestamp
-    // TODO: add public/private
+    var isPublic: Bool? // Optional for now
+    // TODO: add profileID for making a wishlist for frined
     
     var items: [Item]? = []
 }

@@ -7,14 +7,14 @@
 
 import Foundation
 import FirebaseAuth
-import FirebaseCore
 import FirebaseFirestore
 
 class WishlistViewModel: ObservableObject {
     @Published var wishlists: [Wishlist] = []
-    // TODO: Add     @Published var isLoading = false
     @Published var expandedWishlistIDs: Set<String> = []
+    // TODO: Add     @Published var isLoading = false
     
+    // Services
     private let wishlistService: WishlistService
     private let itemService: ItemService
 
@@ -61,14 +61,15 @@ class WishlistViewModel: ObservableObject {
         }
     }
     
-    func createWishlist(title: String, initialItems: [Item]) {
+    func createWishlist(title: String, initialItems: [Item], isPublic: Bool) {
         guard let userID = Auth.auth().currentUser?.uid else { return }
         
         let newWishlist = Wishlist(
             title: title,
             lastUpdated: Timestamp(date: Date()),
             userID: userID,
-            creationDate: Timestamp(date: Date())
+            creationDate: Timestamp(date: Date()),
+            isPublic: isPublic
         )
 
         wishlistService.createWishlist(newWishlist) { [weak self] result in
@@ -89,6 +90,39 @@ class WishlistViewModel: ObservableObject {
                     
                 case .failure(let error):
                     Logger.error("Error creating wishlist: \(error.localizedDescription)")
+                }
+            }
+        }
+    }
+    
+    func updateWishlist(_ wishlist: Wishlist) {
+        wishlistService.updateWishlist(wishlist) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success:
+                    self?.fetchWishlists() // Refresh to reflect updates
+                    
+                    // Re-fetch items for the updated wishlist
+                    if let wishlistID = wishlist.id {
+                        Logger.info("NEW ISSUE")
+                        self?.fetchItems(fromWishlistID: wishlistID)
+                    }
+                    
+                case .failure(let error):
+                    Logger.error("Error updating wishlist: \(error.localizedDescription)")
+                }
+            }
+        }
+    }
+    
+    func deleteWishlist(_ wishlist: Wishlist) {
+        wishlistService.deleteWishlist(wishlist) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success:
+                    self?.wishlists.removeAll { $0.id == wishlist.id }
+                case .failure(let error):
+                    Logger.error("Error deleting wishlist: \(error.localizedDescription)")
                 }
             }
         }

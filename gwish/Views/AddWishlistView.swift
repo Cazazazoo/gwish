@@ -6,14 +6,14 @@
 //
 
 import SwiftUI
-import FirebaseCore
 
 struct AddWishlistView: View {
-    var onSave: (_ title: String, _ items: [Item]) -> Void
+    var onSave: (_ title: String, _ items: [Item], _ isPublic: Bool) -> Void
     @Environment(\.dismiss) private var dismiss
     @State private var itemDrafts: [ItemDraft] = [ItemDraft()]
     @State private var selectedDraftIndex: Int? = nil
     @State private var wishlistTitle = ""
+    @State private var isPublic: Bool = false
     @State private var addItem = false // Toggle for showing item input
     @State private var editingDraft: ItemDraft? = nil
 
@@ -25,6 +25,9 @@ struct AddWishlistView: View {
 
             TextField("Enter wishlist title", text: $wishlistTitle)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding()
+            
+            Toggle("Public", isOn: $isPublic)
                 .padding()
 
             Toggle("Add an item", isOn: $addItem)
@@ -88,7 +91,7 @@ struct AddWishlistView: View {
                     let newItems = itemDrafts
                         .filter { !$0.name.isEmpty }
                         .map { $0.toItem() }
-                    onSave(wishlistTitle, newItems)
+                    onSave(wishlistTitle, newItems, isPublic)
                     dismiss()
                 }
                 .padding()

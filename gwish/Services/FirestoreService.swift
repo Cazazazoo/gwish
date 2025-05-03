@@ -8,8 +8,6 @@
 import Foundation
 import FirebaseFirestore
 
-// TODO: figure out Views if its just a click and layer above current screen
-
 final class FirestoreService {
     static let shared = FirestoreService()
     private let db = Firestore.firestore()
@@ -42,6 +40,36 @@ final class FirestoreService {
             let documents = snapshot?.documents.compactMap { try? $0.data(as: T.self) } ?? []
             completion(.success(documents))
         }
+    }
+    
+    // MARK: - Update Document
+    func updateDocument<T: Encodable>(in collectionPath: String, documentId: String, with data: T, completion: @escaping (Result<Void, Error>) -> Void) {
+        do {
+            try db.collection(collectionPath)
+                .document(documentId)
+                .setData(from: data, merge: true) { error in
+                    if let error = error {
+                        completion(.failure(error))
+                    } else {
+                        completion(.success(()))
+                    }
+                }
+        } catch {
+            completion(.failure(error))
+        }
+    }
+    
+    // MARK: - Delete Document
+    func deleteDocument(from collectionPath: String, documentId: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        db.collection(collectionPath)
+            .document(documentId)
+            .delete { error in
+                if let error = error {
+                    completion(.failure(error))
+                } else {
+                    completion(.success(()))
+                }
+            }
     }
 
     // MARK: - Add Subdocument

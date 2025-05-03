@@ -6,17 +6,21 @@
 //
 
 import SwiftUI
+import FirebaseFirestore
 
 private enum ActiveModal: Identifiable {
     case addWishlist
     case editItem(draft: ItemDraft, wishlistID: String)
     case addItem(wishlistID: String)
+    case editWishlist(wishlist: Wishlist)
 
     var id: String {
         switch self {
         case .addWishlist: return "addWishlist"
         case .editItem(let draft, _): return "editItem-\(draft.id)"
         case .addItem(let id): return "addItem-\(id)"
+        case .editWishlist(let wishlist):
+            return "editWishlist-\(wishlist.id ?? "unknown")"
         }
     }
 }
@@ -111,8 +115,8 @@ struct WishlistView: View {
             switch modal {
             case .addWishlist:
                 AddWishlistView(
-                    onSave: { title, items in
-                        viewModel.createWishlist(title: title, initialItems: items)
+                    onSave: { title, items, isPublic in
+                        viewModel.createWishlist(title: title, initialItems: items, isPublic: isPublic)
                         activeModal = nil
                     }
                 )
@@ -135,6 +139,26 @@ struct WishlistView: View {
                     onDone: { draft in
                         let newItem = draft.toItem()
                         viewModel.addItem(toWishlist: wishlistID, item: newItem)
+                        activeModal = nil
+                    }
+                )
+                
+            case .editWishlist(let wishlist):
+                WishlistDetailView(
+                    wishlist: wishlist,
+                    onSave: { newTitle, isPublic in
+                        guard let wishlistID = wishlist.id else { return }
+
+                        var updated = wishlist
+                        updated.title = newTitle
+                        updated.isPublic = isPublic
+                        updated.lastUpdated = Timestamp(date: Date())
+
+                        viewModel.updateWishlist(updated)
+                        activeModal = nil
+                    },
+                    onDelete: {
+                        viewModel.deleteWishlist(wishlist)
                         activeModal = nil
                     }
                 )
@@ -174,7 +198,7 @@ struct WishlistView: View {
                 Spacer()
                 
                 Button("Edit") {
-                    // TODO
+                    activeModal = .editWishlist(wishlist: wishlist)
                 }
             }
             .padding(.horizontal)
