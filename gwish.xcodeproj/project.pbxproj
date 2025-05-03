@@ -33,6 +33,11 @@
 		85AF91722DBC8E2D001CFC4B /* TopBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85AF91712DBC8E2D001CFC4B /* TopBarView.swift */; };
 		85AF91742DBCC45E001CFC4B /* ItemDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85AF91732DBCC45E001CFC4B /* ItemDetailView.swift */; };
 		85CE2A912DC5A65800A0E622 /* WishlistDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CE2A902DC5A65800A0E622 /* WishlistDetailView.swift */; };
+		85CE2A932DC65CEF00A0E622 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CE2A922DC65CEF00A0E622 /* Profile.swift */; };
+		85CE2A952DC6646000A0E622 /* ProfileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CE2A942DC6646000A0E622 /* ProfileService.swift */; };
+		85CE2A972DC6685300A0E622 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CE2A962DC6685300A0E622 /* ProfileViewModel.swift */; };
+		85CE2A992DC6688D00A0E622 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CE2A982DC6688D00A0E622 /* ProfileView.swift */; };
+		85CE2A9B2DC6690F00A0E622 /* ProfileDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CE2A9A2DC6690F00A0E622 /* ProfileDetailView.swift */; };
 		85DB03F02D6EC8A700EC98C0 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */ = {isa = PBXBuildFile; productRef = 85DB03EF2D6EC8A700EC98C0 /* FirebaseAnalyticsWithoutAdIdSupport */; };
 		85DB03F22D6EC8A700EC98C0 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 85DB03F12D6EC8A700EC98C0 /* FirebaseAuth */; };
 		85DB03F42D6EC8A700EC98C0 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 85DB03F32D6EC8A700EC98C0 /* FirebaseCore */; };
@@ -88,6 +93,11 @@
 		85AF91712DBC8E2D001CFC4B /* TopBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopBarView.swift; sourceTree = "<group>"; };
 		85AF91732DBCC45E001CFC4B /* ItemDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailView.swift; sourceTree = "<group>"; };
 		85CE2A902DC5A65800A0E622 /* WishlistDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WishlistDetailView.swift; sourceTree = "<group>"; };
+		85CE2A922DC65CEF00A0E622 /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
+		85CE2A942DC6646000A0E622 /* ProfileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileService.swift; sourceTree = "<group>"; };
+		85CE2A962DC6685300A0E622 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
+		85CE2A982DC6688D00A0E622 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		85CE2A9A2DC6690F00A0E622 /* ProfileDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDetailView.swift; sourceTree = "<group>"; };
 		85DB03FA2D6EE30300EC98C0 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		85DC0B1A2D85B7260049EDED /* WishlistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WishlistView.swift; sourceTree = "<group>"; };
 		85DC0B1C2D85BC4D0049EDED /* AddWishlistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddWishlistView.swift; sourceTree = "<group>"; };
@@ -132,6 +142,7 @@
 				8562144A2D737AA2007A13CF /* Category.swift */,
 				8562144C2D737AB5007A13CF /* Status.swift */,
 				8562144E2D737ABF007A13CF /* Occasion.swift */,
+				85CE2A922DC65CEF00A0E622 /* Profile.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -209,6 +220,8 @@
 				85AF91712DBC8E2D001CFC4B /* TopBarView.swift */,
 				85AF91732DBCC45E001CFC4B /* ItemDetailView.swift */,
 				85CE2A902DC5A65800A0E622 /* WishlistDetailView.swift */,
+				85CE2A982DC6688D00A0E622 /* ProfileView.swift */,
+				85CE2A9A2DC6690F00A0E622 /* ProfileDetailView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -217,6 +230,7 @@
 			isa = PBXGroup;
 			children = (
 				856214412D72E7D1007A13CF /* WishlistViewModel.swift */,
+				85CE2A962DC6685300A0E622 /* ProfileViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -228,6 +242,7 @@
 				8562143F2D72E136007A13CF /* FirestoreService.swift */,
 				85245DD22DBB5BDE00EEC5C2 /* WishlistService.swift */,
 				85245DD42DBB5F3A00EEC5C2 /* ItemService.swift */,
+				85CE2A942DC6646000A0E622 /* ProfileService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -376,7 +391,9 @@
 				85DC0B1B2D85B7270049EDED /* WishlistView.swift in Sources */,
 				856214452D72EE78007A13CF /* Wishlist.swift in Sources */,
 				8562144B2D737AA3007A13CF /* Category.swift in Sources */,
+				85CE2A932DC65CEF00A0E622 /* Profile.swift in Sources */,
 				856214492D737660007A13CF /* Item.swift in Sources */,
+				85CE2A9B2DC6690F00A0E622 /* ProfileDetailView.swift in Sources */,
 				85DB03FB2D6EE30300EC98C0 /* AuthService.swift in Sources */,
 				85CE2A912DC5A65800A0E622 /* WishlistDetailView.swift in Sources */,
 				85AF91702DBC7D8D001CFC4B /* MainView.swift in Sources */,
@@ -386,9 +403,12 @@
 				85AF91742DBCC45E001CFC4B /* ItemDetailView.swift in Sources */,
 				8562144D2D737AB5007A13CF /* Status.swift in Sources */,
 				85AF91722DBC8E2D001CFC4B /* TopBarView.swift in Sources */,
+				85CE2A992DC6688D00A0E622 /* ProfileView.swift in Sources */,
+				85CE2A972DC6685300A0E622 /* ProfileViewModel.swift in Sources */,
 				856214402D72E136007A13CF /* FirestoreService.swift in Sources */,
 				85245DD32DBB5BDE00EEC5C2 /* WishlistService.swift in Sources */,
 				857673C82D6EC13A003F9071 /* ContentView.swift in Sources */,
+				85CE2A952DC6646000A0E622 /* ProfileService.swift in Sources */,
 				856214472D72EEBD007A13CF /* User.swift in Sources */,
 				85245DCF2DBB532500EEC5C2 /* Logger.swift in Sources */,
 				8562143C2D6F0E8D007A13CF /* LoginSignUpView.swift in Sources */,

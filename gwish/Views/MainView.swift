@@ -51,7 +51,7 @@ struct MainView: View {
                     case .wishlists:
                         WishlistView()
                     case .profiles:
-                        EmptyView()
+                        ProfileView()
                     }
                 }
             }
