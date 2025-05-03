@@ -7,14 +7,24 @@
 
 import SwiftUI
 
+private enum ActiveModal: Identifiable {
+    case addWishlist
+    case editItem(draft: ItemDraft, wishlistID: String)
+    case addItem(wishlistID: String)
+
+    var id: String {
+        switch self {
+        case .addWishlist: return "addWishlist"
+        case .editItem(let draft, _): return "editItem-\(draft.id)"
+        case .addItem(let id): return "addItem-\(id)"
+        }
+    }
+}
+
 struct WishlistView: View {
     @StateObject private var viewModel = WishlistViewModel()
-    // Updating items
-    @State private var selectedItemDraft: ItemDraft? = nil
-    @State private var currentEditingWishlistID: String? = nil
-    // Adding items
-    @State private var wishlistIDForNewItem: WishlistIDWrapper? = nil
-    
+    @State private var activeModal: ActiveModal? = nil
+
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
             Color(red: 245/255, green: 245/255, blue: 255/255) // Soft lavender-tinted background
@@ -86,7 +96,7 @@ struct WishlistView: View {
             }
             
             Button(action: {
-                viewModel.isAddingWishlist = true
+                activeModal = .addWishlist
             }) {
                 Image(systemName: "plus")
                     .font(.title)
@@ -97,35 +107,33 @@ struct WishlistView: View {
                     .padding()
             }
         }
-        // Adding wishlist
-        .sheet(isPresented: $viewModel.isAddingWishlist) {
-            AddWishlistView(viewModel: viewModel)
-        }
-        // Editing item from drop-down
-        .sheet(item: $selectedItemDraft) { draft in
-            ItemDetailView(
-                item: draft,
-                mode: .edit,
-                onDone: { updatedDraft in
-                    if let wishlistID = currentEditingWishlistID {
+        .sheet(item: $activeModal) { modal in
+            switch modal {
+            case .addWishlist:
+                AddWishlistView(viewModel: viewModel)
+                
+            case .editItem(let draft, let wishlistID):
+                ItemDetailView(
+                    item: draft,
+                    mode: .edit,
+                    onDone: { updatedDraft in
                         let updatedItem = updatedDraft.toItem()
                         viewModel.updateItem(inWishlist: wishlistID, itemID: draft.id, item: updatedItem)
+                        activeModal = nil
                     }
-                    currentEditingWishlistID = nil
-                }
-            )
-        }
-        // Adding item from drop-down
-        .sheet(item: $wishlistIDForNewItem) { wishlistID in
-            ItemDetailView(
-                item: ItemDraft(),
-                mode: .add,
-                onDone: { draft in
-                    let newItem = draft.toItem()
-                    viewModel.addItem(toWishlist: wishlistID.id, item: newItem)
-                    wishlistIDForNewItem = nil
-                }
-            )
+                )
+                
+            case .addItem(let wishlistID):
+                ItemDetailView(
+                    item: ItemDraft(),
+                    mode: .add,
+                    onDone: { draft in
+                        let newItem = draft.toItem()
+                        viewModel.addItem(toWishlist: wishlistID, item: newItem)
+                        activeModal = nil
+                    }
+                )
+            }
         }
         .onAppear {
             viewModel.fetchWishlists()
@@ -155,8 +163,7 @@ struct WishlistView: View {
                 // TODO: add loading indicator?
                 Button("Add an item") {
                     if let id = wishlist.id {
-                        wishlistIDForNewItem = WishlistIDWrapper(id: id)
-                    }
+                        activeModal = .addItem(wishlistID: id)                    }
                 }
                 
                 Spacer()
@@ -176,8 +183,9 @@ struct WishlistView: View {
             Text(item.name)
                 .underline()
                 .onTapGesture {
-                    selectedItemDraft = ItemDraft(from: item)
-                    currentEditingWishlistID = wishlistID
+                    if let wishlistID = wishlistID {
+                        activeModal = .editItem(draft: ItemDraft(from: item), wishlistID: wishlistID)
+                    }
                 }
                 .strikethrough(item.complete == true)
                 .foregroundColor(item.complete == true ? .gray : .primary)

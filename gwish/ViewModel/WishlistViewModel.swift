@@ -13,7 +13,6 @@ import FirebaseFirestore
 class WishlistViewModel: ObservableObject {
     @Published var wishlists: [Wishlist] = []
     // TODO: Add     @Published var isLoading = false
-    @Published var isAddingWishlist = false // Controls pop-up visibility
     @Published var expandedWishlistIDs: Set<String> = []
     
     private let wishlistService: WishlistService
@@ -87,7 +86,6 @@ class WishlistViewModel: ObservableObject {
 
                     // Refresh wishlists and dismiss
                     self?.fetchWishlists()
-                    self?.isAddingWishlist = false
                     
                 case .failure(let error):
                     Logger.error("Error creating wishlist: \(error.localizedDescription)")

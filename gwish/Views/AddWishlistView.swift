@@ -10,8 +10,8 @@ import FirebaseCore
 
 struct AddWishlistView: View {
     @ObservedObject var viewModel: WishlistViewModel
+    @Environment(\.dismiss) private var dismiss
     @State private var itemDrafts: [ItemDraft] = [ItemDraft()]
-//    @State private var showItemDetail = false
     @State private var selectedDraftIndex: Int? = nil
     @State private var wishlistTitle = ""
     @State private var addItem = false // Toggle for showing item input
@@ -77,7 +77,7 @@ struct AddWishlistView: View {
 
             HStack {
                 Button("Cancel") {
-                    viewModel.isAddingWishlist = false
+                    dismiss()
                 }
                 .padding()
                 .foregroundColor(.red)
@@ -89,6 +89,7 @@ struct AddWishlistView: View {
                         .filter { !$0.name.isEmpty }
                         .map { $0.toItem() }
                     viewModel.createWishlist(title: wishlistTitle, initialItems: newItems)
+                    dismiss()
                 }
                 .padding()
                 .disabled(wishlistTitle.isEmpty)
