@@ -42,6 +42,30 @@ final class FirestoreService {
         }
     }
     
+    // MARK: - Fetch Document by ID
+    func fetchDocument<T: Decodable>(from collectionPath: String, documentId: String, as type: T.Type, completion: @escaping (Result<T, Error>) -> Void) {
+        db.collection(collectionPath)
+            .document(documentId)
+            .getDocument { snapshot, error in
+                if let error = error {
+                    completion(.failure(error))
+                    return
+                }
+
+                guard let document = snapshot, document.exists else {
+                    completion(.failure(NSError(domain: "", code: 404, userInfo: [NSLocalizedDescriptionKey: "Document not found."])))
+                    return
+                }
+
+                do {
+                    let decoded = try document.data(as: T.self)
+                    completion(.success(decoded))
+                } catch {
+                    completion(.failure(error))
+                }
+            }
+    }
+    
     // MARK: - Update Document
     func updateDocument<T: Encodable>(in collectionPath: String, documentId: String, with data: T, completion: @escaping (Result<Void, Error>) -> Void) {
         do {

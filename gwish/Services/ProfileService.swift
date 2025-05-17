@@ -19,6 +19,10 @@ final class ProfileService {
     func fetchProfiles(for userId: String, completion: @escaping (Result<[Profile], Error>) -> Void) {
         firestore.fetchDocuments(from: collectionPath, as: Profile.self, whereField: "userID", isEqualTo: userId, completion: completion)
     }
+    
+    func fetchProfile(withID id: String, completion: @escaping (Result<Profile, Error>) -> Void) {
+        firestore.fetchDocument(from: collectionPath, documentId: id, as: Profile.self, completion: completion)
+    }
 
     func updateProfile(_ profile: Profile, completion: @escaping (Result<Void, Error>) -> Void) {
         guard let id = profile.id else {

@@ -16,8 +16,8 @@ struct MainView: View {
     
     private var currentTitle: String {
         switch selectedScreen {
-        case .home:
-            return "gwish"
+//        case .home:
+//            return "gwish"
         case .wishlists:
             return "Your Wishlists"
         case .profiles:
@@ -46,8 +46,8 @@ struct MainView: View {
                 // Main Screen Content
                 Group {
                     switch selectedScreen {
-                    case .home:
-                        EmptyView()
+//                    case .home:
+//                        EmptyView()
                     case .wishlists:
                         WishlistView()
                     case .profiles:

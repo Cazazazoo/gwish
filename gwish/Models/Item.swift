@@ -16,7 +16,7 @@ struct Item: Codable, Identifiable {
     var location: String?
     var creationDate: Timestamp
     // Include last updated for filter purposes?
-    var complete: Bool?
+    var complete: Bool
     // Collections below
     var category: DocumentReference? // Reference to Category
     var occasion: DocumentReference? // Reference to Occasion
@@ -50,7 +50,7 @@ struct ItemDraft: Identifiable {
         self.name = item.name
         self.price = item.price != nil ? String(item.price!) : ""
         self.priority = item.priority ?? .none
-        self.complete = item.complete ?? false
+        self.complete = item.complete
         self.location = item.location ?? ""
         self.link = item.url?.first ?? ""
         self.category = item.category?.documentID ?? ""

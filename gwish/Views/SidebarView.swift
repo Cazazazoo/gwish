@@ -43,7 +43,7 @@ struct SidebarView: View {
 }
 
 enum SidebarOption: String, CaseIterable {
-    case home = "Home"
+//    case home = "Home"
     case wishlists = "Wishlists"
     case profiles = "Profiles"
 }

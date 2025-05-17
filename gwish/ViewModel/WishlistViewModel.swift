@@ -38,8 +38,13 @@ class WishlistViewModel: ObservableObject {
     }
     
     func toggleItemComplete(inWishlist wishlistID: String, item: Item) {
+        guard let itemID = item.id else {
+            Logger.error("Item missing ID")
+            return
+        }
+        
         var updatedItem = item
-        updatedItem.complete = !(item.complete ?? false)
+        updatedItem.complete = !(item.complete)
 
         updateItem(inWishlist: wishlistID, itemID: item.id ?? "", item: updatedItem)
     }

@@ -149,7 +149,7 @@ struct WishlistView: View {
                 
             case .editWishlist(let wishlist):
                 WishlistDetailView(
-                    wishlist: wishlist,
+                    wishlist: wishlist, viewModel: viewModel,
                     onSave: { newTitle, isPublic in
                         var updated = wishlist
                         updated.title = newTitle

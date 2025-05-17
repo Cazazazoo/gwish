@@ -71,9 +71,8 @@ struct ProfileDetailView: View {
                 }
                 .foregroundColor(.red)
                 .padding(.top)
-            }
-            if case .edit(let profile) = mode {
-                Button("Edit Wishlist") {
+                
+                Button("Wishlist") {
                     showingWishlistSheet = true
                 }
                 .padding(.top)

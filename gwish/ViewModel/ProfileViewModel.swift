@@ -34,6 +34,20 @@ class ProfileViewModel: ObservableObject {
         }
     }
     
+    func fetchProfile(withID id: String, completion: @escaping (Profile?) -> Void) {
+        profileService.fetchProfile(withID: id) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let profile):
+                    completion(profile)
+                case .failure(let error):
+                    Logger.error("Failed to fetch profile by ID: \(error)")
+                    completion(nil)
+                }
+            }
+        }
+    }
+    
     func addProfile(from draft: ProfileDraft) {
         guard let userID = Auth.auth().currentUser?.uid else { return }
         let profile = draft.toProfile(userID: userID)
