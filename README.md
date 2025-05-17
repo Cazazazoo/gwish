@@ -64,11 +64,11 @@
 ## Project Structure
 
 gwish/
-├── App/              # App entry point
-├── Models/           # Codable data models (User, Wishlist, Item, Profile)
-├── ViewModels/       # ObservableObject classes that manage logic
-├── Views/            # SwiftUI screens and components
-├── Services/         # Firebase services (Auth, Firestore, etc.)
+- App/              # App entry point
+- Models/           # Codable data models (User, Wishlist, Item, Profile)
+- ViewModels/       # ObservableObject classes that manage logic
+- Views/            # SwiftUI screens and components
+- Services/         # Firebase services (Auth, Firestore, etc.)
 
 ---
 
