@@ -7,9 +7,11 @@
 
 import Foundation
 import FirebaseAuth
+import FirebaseCore
 
 class ProfileViewModel: ObservableObject {
     @Published var profiles: [Profile] = []
+    private let wishlistService = WishlistService()
     
     private let profileService: ProfileService
     
@@ -76,6 +78,48 @@ class ProfileViewModel: ObservableObject {
                 case .failure(let error):
                     Logger.error("Failed to delete profile: \(error.localizedDescription)")
                 }
+            }
+        }
+    }
+    
+    // MARK: - Wishlists
+    func createOrUpdateWishlist(
+        title: String,
+        items: [Item],
+        isPublic: Bool,
+        profileID: String,
+        completion: (() -> Void)? = nil
+    ) {
+        guard let userID = Auth.auth().currentUser?.uid else { return }
+
+        let wishlist = Wishlist(
+            title: title,
+            lastUpdated: Timestamp(date: Date()),
+            userID: userID,
+            creationDate: Timestamp(date: Date()),
+            isPublic: isPublic,
+            profileID: profileID
+        )
+
+        wishlistService.createWishlist(wishlist) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let ref):
+                    for item in items {
+                        self.addItem(toWishlist: ref.documentID, item: item)
+                    }
+                    completion?()
+                case .failure(let error):
+                    Logger.error("Failed to create wishlist: \(error)")
+                }
+            }
+        }
+    }
+
+    private func addItem(toWishlist wishlistID: String, item: Item) {
+        ItemService().addItem(toWishlist: wishlistID, item: item) { result in
+            if case .failure(let error) = result {
+                Logger.error("Failed to add item: \(error)")
             }
         }
     }

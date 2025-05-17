@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct AddWishlistView: View {
-    var onSave: (_ title: String, _ items: [Item], _ isPublic: Bool) -> Void
+    var profileID: String? = nil // Input passed into view from parent
+    var onSave: (_ title: String, _ items: [Item], _ isPublic: Bool, _ profileID: String?) -> Void
     @Environment(\.dismiss) private var dismiss
     @State private var itemDrafts: [ItemDraft] = [ItemDraft()]
     @State private var selectedDraftIndex: Int? = nil
@@ -91,7 +92,8 @@ struct AddWishlistView: View {
                     let newItems = itemDrafts
                         .filter { !$0.name.isEmpty }
                         .map { $0.toItem() }
-                    onSave(wishlistTitle, newItems, isPublic)
+                    
+                    onSave(wishlistTitle, newItems, isPublic, profileID)
                     dismiss()
                 }
                 .padding()

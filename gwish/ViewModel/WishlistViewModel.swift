@@ -62,7 +62,7 @@ class WishlistViewModel: ObservableObject {
         }
     }
     
-    func createWishlist(title: String, initialItems: [Item], isPublic: Bool) {
+    func createWishlist(title: String, initialItems: [Item], isPublic: Bool, profileID: String? = nil) {
         guard let userID = Auth.auth().currentUser?.uid else { return }
         
         let newWishlist = Wishlist(
@@ -70,7 +70,8 @@ class WishlistViewModel: ObservableObject {
             lastUpdated: Timestamp(date: Date()),
             userID: userID,
             creationDate: Timestamp(date: Date()),
-            isPublic: isPublic
+            isPublic: isPublic,
+            profileID: profileID
         )
 
         wishlistService.createWishlist(newWishlist) { [weak self] result in

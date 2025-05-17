@@ -119,8 +119,8 @@ struct WishlistView: View {
             switch modal {
             case .addWishlist:
                 AddWishlistView(
-                    onSave: { title, items, isPublic in
-                        viewModel.createWishlist(title: title, initialItems: items, isPublic: isPublic)
+                    onSave: { title, items, isPublic, profileID  in
+                        viewModel.createWishlist(title: title, initialItems: items, isPublic: isPublic, profileID: profileID)
                         activeModal = nil
                     }
                 )

@@ -80,6 +80,7 @@ struct ProfileView: View {
                         }
 
                     case .friends:
+                        // TODO: add friends
                         Text("Friends list goes here.")
                             .foregroundColor(.gray)
                             .padding()
@@ -109,6 +110,7 @@ struct ProfileView: View {
                 ProfileDetailView(
                     mode: .add,
                     draft: ProfileDraft(),
+                    profileViewModel: viewModel,
                     onSave: { draft in
                         viewModel.addProfile(from: draft)
                         activeModal = nil
@@ -119,6 +121,7 @@ struct ProfileView: View {
                 ProfileDetailView(
                     mode: .edit(profile),
                     draft: ProfileDraft(profile: profile),
+                    profileViewModel: viewModel,
                     onSave: { draft in
                         viewModel.updateProfile(from: draft, originalProfile: profile) 
                         activeModal = nil
