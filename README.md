@@ -37,8 +37,8 @@
 ### Setup Instructions
 
 1. **Clone the repo**
-   git clone https://github.com/Cazazazoo/gwish.git
-   cd gwish
+   - git clone https://github.com/Cazazazoo/gwish.git
+   - cd gwish
 
 2. **Install Firebase SDK using SPM**
    - In Xcode: `File` → `Add Packages...`
