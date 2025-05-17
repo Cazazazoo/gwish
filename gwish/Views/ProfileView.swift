@@ -7,6 +7,13 @@
 
 import SwiftUI
 
+private enum ProfileTab: String, CaseIterable, Identifiable {
+    case profiles = "Profiles"
+    case friends = "Friends"
+
+    var id: String { self.rawValue }
+}
+
 private enum ActiveProfileModal: Identifiable {
     case addProfile
     case editProfile(Profile)
@@ -21,44 +28,61 @@ private enum ActiveProfileModal: Identifiable {
 
 struct ProfileView: View {
     @StateObject private var viewModel = ProfileViewModel()
+    @State private var selectedTab: ProfileTab = .profiles
     @State private var activeModal: ActiveProfileModal?
 
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
             ScrollView {
                 VStack(spacing: 16) {
-                    if viewModel.profiles.isEmpty {
-                        Text("No Profiles")
+                    Picker("Tab", selection: $selectedTab) {
+                        ForEach(ProfileTab.allCases) { tab in
+                            Text(tab.rawValue).tag(tab)
+                        }
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                    .padding(.horizontal)
+                    switch selectedTab {
+                    // TODO: Figure out whether this broke something with fetching profiles or if things are just slow wifi wise right now
+                    case .profiles:
+                        if viewModel.profiles.isEmpty {
+                            Text("No Profiles")
+                                .foregroundColor(.gray)
+                                .padding()
+                        } else {
+                            ForEach(viewModel.profiles) { profile in
+                                HStack {
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text(profile.name)
+                                            .font(.headline)
+                                        if let relationship = profile.relationshipToUser {
+                                            Text(relationship)
+                                                .font(.subheadline)
+                                                .foregroundColor(.gray)
+                                        }
+                                    }
+
+                                    Spacer()
+
+                                    Button(action: {
+                                        activeModal = .editProfile(profile)
+                                    }) {
+                                        Image(systemName: "pencil")
+                                    }
+                                    .buttonStyle(BorderlessButtonStyle())
+                                }
+                                .padding()
+                                .background(Color.white)
+                                .cornerRadius(10)
+                                .shadow(radius: 2)
+                                .padding(.horizontal)
+                            }
+                        }
+
+                    case .friends:
+                        Text("Friends list goes here.")
                             .foregroundColor(.gray)
                             .padding()
-                    } else {
-                        ForEach(viewModel.profiles) { profile in
-                            HStack {
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text(profile.name)
-                                        .font(.headline)
-                                    if let relationship = profile.relationshipToUser {
-                                        Text(relationship)
-                                            .font(.subheadline)
-                                            .foregroundColor(.gray)
-                                    }
-                                }
-
-                                Spacer()
-
-                                Button(action: {
-                                    activeModal = .editProfile(profile)
-                                }) {
-                                    Image(systemName: "pencil")
-                                }
-                                .buttonStyle(BorderlessButtonStyle())
-                            }
-                            .padding()
-                            .background(Color.white)
-                            .cornerRadius(10)
-                            .shadow(radius: 2)
-                            .padding(.horizontal)
-                        }
                     }
                 }
                 .padding(.top)
@@ -72,7 +96,7 @@ struct ProfileView: View {
                     .frame(width: 55, height: 55)
                     .background(Color.white)
                     .clipShape(Circle())
-                    .shadow(radius: 4)
+                    .shadow(radius: 5)
                     .padding()
             }
         }

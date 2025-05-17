@@ -14,7 +14,7 @@ struct Profile: Codable, Identifiable {
     var creationDate: Timestamp
     var userID: String
 
-    /// A reference to the connected profile (friend/user)
+    /// Future feature: A reference to the connected profile (friend/user)
     var connectedProfileID: String? // Document Reference later?
 
     var hobbies: [String]?
